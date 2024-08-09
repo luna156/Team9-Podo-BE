@@ -56,20 +56,17 @@ public class AdminService {
 	public ArrivalUserListDto configArrivalEventReward(EventRewardConfigRequestDto dto) {
 		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
 
-		List<EventReward> arrivalReward = eventRewardRepository.findByEvent(arrivalEvent);
-		eventRewardRepository.deleteAllInBatch(arrivalReward);
-		eventRewardRepository.flush(); // 즉시 데이터베이스에 반영
+		arrivalEvent.getEventRewardList().clear(); //기존 reward 삭제
+		dto.getEventRewardList().forEach(eventRewardDto -> arrivalEvent
+				.getEventRewardList()
+				.add(EventReward.builder()
+							.reward(eventRewardDto.getReward())
+							.rewardRank(eventRewardDto.getRank())
+							.numWinners(eventRewardDto.getNumWinners())
+							.build())
+		);
+		eventRepository.flush();
 
-		for(EventRewardDto rewardDto : dto.getEventRewardList()) {
-			eventRewardRepository.save(
-					EventReward.builder()
-							.event(arrivalEvent)
-							.reward(rewardDto.getReward())
-							.rewardRank(rewardDto.getRank())
-							.numWinners(rewardDto.getNumWinners())
-							.build()
-			);
-		}
 		return getArrivalApplicationList();
 	}
 
@@ -77,24 +74,18 @@ public class AdminService {
 	public LotsUserListDto configLotsEventReward(EventRewardConfigRequestDto dto) {
 		Event lotsEvent = eventRepository.findById(lotsEventId).orElseThrow(EventNotFoundException::new);
 
-		List<EventReward> lotsReward = eventRewardRepository.findByEvent(lotsEvent);
-		eventRewardRepository.deleteAllInBatch(lotsReward);
-		eventRewardRepository.flush(); // 즉시 데이터베이스에 반영
+		lotsEvent.getEventRewardList().clear(); //기존 reward 삭제
+		dto.getEventRewardList().forEach(eventRewardDto -> lotsEvent
+				.getEventRewardList()
+				.add(EventReward.builder()
+						     .reward(eventRewardDto.getReward())
+						     .rewardRank(eventRewardDto.getRank())
+						     .numWinners(eventRewardDto.getNumWinners())
+						     .build())
+		);
 
-		for(EventRewardDto rewardDto : dto.getEventRewardList()) {
-			eventRewardRepository.save(
-					EventReward.builder()
-							.event(lotsEvent)
-							.reward(rewardDto.getReward())
-							.rewardRank(rewardDto.getRank())
-							.numWinners(rewardDto.getNumWinners())
-							.build()
-			);
-		}
-
-		lotsEvent.getEventWeight().setWeightCondition(dto.getEventWeight().getCondition());
-		lotsEvent.getEventWeight().setTimes(dto.getEventWeight().getTimes());
-		eventWeightRepository.save(lotsEvent.getEventWeight());
+		lotsEvent.getEventWeight().updateWeightCondition(dto.getEventWeight().getCondition());
+		lotsEvent.getEventWeight().updateTimes(dto.getEventWeight().getTimes());
 
 		return getLotsApplicationList();
 	}

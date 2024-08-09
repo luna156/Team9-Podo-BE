@@ -61,6 +61,4 @@ public class Event extends DateEntity {
     public void updateStartAt(LocalDateTime startAt) {this.startAt = startAt;}
     public void updateEndAt(LocalDateTime endAt) {this.endAt = endAt;}
     public void updateTagImage(String tagImage) {this.tagImage = tagImage;}
-    public void updateEventRewardList(List<EventReward> eventRewardList) {this.eventRewardList = eventRewardList;}
-    public void updateEventWeight(EventWeight eventWeight) {this.eventWeight = eventWeight;}
 }
