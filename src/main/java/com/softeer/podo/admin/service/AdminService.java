@@ -32,6 +32,9 @@ public class AdminService {
 	private final ArrivalUserRepository arrivalUserRepository;
 	private final UserMapper userMapper;
 
+	private final Long arrivalEventId = 1L;
+	private final Long lotsEventId = 2L;
+
 	@Transactional
 	public EventListResponseDto getEventList() {
 		return EventMapper.eventListToEventListResponseDto(eventRepository.findAll());
@@ -39,39 +42,19 @@ public class AdminService {
 
 	@Transactional
 	public EventDto configArrivalEvent(EventConfigRequestDto dto) {
-		Event arrivalEvent = eventRepository.findById(1L).orElseThrow(EventNotFoundException::new);
-
-		arrivalEvent.setTitle(dto.getTitle());
-		arrivalEvent.setDescription(dto.getDescription());
-		arrivalEvent.setRepeatDay(dto.getRepeatDay());
-		arrivalEvent.setRepeatTime(dto.getRepeatTime());
-		arrivalEvent.setStartAt(dto.getStartAt());
-		arrivalEvent.setEndAt(dto.getEndAt());
-		arrivalEvent.setTagImage(dto.getTagImage());
-
-		eventRepository.save(arrivalEvent);
+		Event arrivalEvent = updateEventByConfigDto(arrivalEventId, dto);
 		return EventMapper.EventToEventDto(arrivalEvent);
 	}
 
 	@Transactional
 	public EventDto configLotsEvent(EventConfigRequestDto dto) {
-		Event lotsEvent =  eventRepository.findById(2L).orElseThrow(EventNotFoundException::new);
-
-		lotsEvent.setTitle(dto.getTitle());
-		lotsEvent.setDescription(dto.getDescription());
-		lotsEvent.setRepeatDay(dto.getRepeatDay());
-		lotsEvent.setRepeatTime(dto.getRepeatTime());
-		lotsEvent.setStartAt(dto.getStartAt());
-		lotsEvent.setEndAt(dto.getEndAt());
-		lotsEvent.setTagImage(dto.getTagImage());
-
-		eventRepository.save(lotsEvent);
+		Event lotsEvent = updateEventByConfigDto(lotsEventId, dto);
 		return EventMapper.EventToEventDto(lotsEvent);
 	}
 
 	@Transactional
 	public ArrivalUserListDto configArrivalEventReward(EventRewardConfigRequestDto dto) {
-		Event arrivalEvent = eventRepository.findById(1L).orElseThrow(EventNotFoundException::new);
+		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
 
 		List<EventReward> arrivalReward = eventRewardRepository.findByEvent(arrivalEvent);
 		eventRewardRepository.deleteAllInBatch(arrivalReward);
@@ -92,7 +75,7 @@ public class AdminService {
 
 	@Transactional
 	public LotsUserListDto configLotsEventReward(EventRewardConfigRequestDto dto) {
-		Event lotsEvent = eventRepository.findById(2L).orElseThrow(EventNotFoundException::new);
+		Event lotsEvent = eventRepository.findById(lotsEventId).orElseThrow(EventNotFoundException::new);
 
 		List<EventReward> lotsReward = eventRewardRepository.findByEvent(lotsEvent);
 		eventRewardRepository.deleteAllInBatch(lotsReward);
@@ -120,7 +103,7 @@ public class AdminService {
 	public ArrivalUserListDto getArrivalApplicationList() {
 		ArrivalUserListDto arrivalUserListDto = userMapper.ArrivalUserListToArrivalUserListDto(arrivalUserRepository.findAll());
 		//선착순 이벤트 id
-		Event arrivalEvent = eventRepository.findById(1L).orElseThrow(EventNotFoundException::new);
+		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
 		List<EventReward> eventRewardList = arrivalEvent.getEventRewardList();
 		// 보상 순위 기준으로 정렬
 		eventRewardList.sort(Comparator.comparingInt(EventReward::getRewardRank));
@@ -147,7 +130,7 @@ public class AdminService {
 	@Transactional
 	public LotsUserListDto getLotsResult(){
 		//랜덤 추첨 이벤트
-		Event lotsEvent = eventRepository.findById(2L).orElseThrow(EventNotFoundException::new);
+		Event lotsEvent = eventRepository.findById(lotsEventId).orElseThrow(EventNotFoundException::new);
 		//보상 리스트
 		List<EventReward> eventRewardList = lotsEvent.getEventRewardList();
 		//응모 목록
@@ -195,5 +178,17 @@ public class AdminService {
 		}
 
 		return getLotsApplicationList();
+	}
+
+	private Event updateEventByConfigDto(Long eventId, EventConfigRequestDto dto) {
+		Event event = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
+		event.updateTitle(dto.getTitle());
+		event.updateDescription(dto.getDescription());
+		event.updateRepeatDay(dto.getRepeatDay());
+		event.updateRepeatTime(dto.getRepeatTime());
+		event.updateStartAt(dto.getStartAt());
+		event.updateEndAt(dto.getEndAt());
+		event.updateTagImage(dto.getTagImage());
+		return event;
 	}
 }
