@@ -28,14 +28,13 @@ public class AdminService {
 	private final EventRepository eventRepository;
 	private final EventRewardRepository eventRewardRepository;
 	private final EventWeightRepository eventWeightRepository;
-	private final EventMapper eventMapper;
 	private final LotsUserRepository lotsUserRepository;
 	private final ArrivalUserRepository arrivalUserRepository;
 	private final UserMapper userMapper;
 
 	@Transactional
 	public EventListResponseDto getEventList() {
-		return eventMapper.eventListToEventListResponseDto(eventRepository.findAll());
+		return EventMapper.eventListToEventListResponseDto(eventRepository.findAll());
 	}
 
 	@Transactional
@@ -51,7 +50,7 @@ public class AdminService {
 		arrivalEvent.setTagImage(dto.getTagImage());
 
 		eventRepository.save(arrivalEvent);
-		return eventMapper.EventToEventDto(arrivalEvent);
+		return EventMapper.EventToEventDto(arrivalEvent);
 	}
 
 	@Transactional
@@ -67,7 +66,7 @@ public class AdminService {
 		lotsEvent.setTagImage(dto.getTagImage());
 
 		eventRepository.save(lotsEvent);
-		return eventMapper.EventToEventDto(lotsEvent);
+		return EventMapper.EventToEventDto(lotsEvent);
 	}
 
 	@Transactional
