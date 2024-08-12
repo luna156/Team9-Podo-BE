@@ -4,15 +4,12 @@ import com.softeer.podo.common.entity.DateEntity;
 import com.softeer.podo.event.model.entity.LotsComment;
 import com.softeer.podo.event.model.entity.TestResult;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Entity
 @Table(name = "event_lots_users")
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,10 +27,11 @@ public class LotsUser extends DateEntity {
     private String name;
     @Column(name = "phone_number", unique = true)
     private String phoneNum;
+    @Setter
     private String reward;
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Setter
     @OneToOne(mappedBy = "lotsUser", orphanRemoval = true, cascade = CascadeType.ALL)
     private LotsComment lotsComment;
-
 }
