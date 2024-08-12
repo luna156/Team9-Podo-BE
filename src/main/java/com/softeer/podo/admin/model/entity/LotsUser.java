@@ -32,6 +32,6 @@ public class LotsUser extends DateEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
     @Setter
-    @OneToOne(mappedBy = "lotsUser", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "lotsUser", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private LotsComment lotsComment;
 }

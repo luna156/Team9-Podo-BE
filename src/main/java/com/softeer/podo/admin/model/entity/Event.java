@@ -48,10 +48,10 @@ public class Event extends DateEntity {
     @Column(name = "tag_image")
     private String tagImage;
 
-    @OneToMany(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<EventReward> eventRewardList;
 
-    @OneToOne(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private EventWeight eventWeight;
 
     public void updateTitle(String title) {this.title = title;}
