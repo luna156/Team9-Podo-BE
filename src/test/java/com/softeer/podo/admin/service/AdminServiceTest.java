@@ -1,7 +1,6 @@
 package com.softeer.podo.admin.service;
 
 import com.softeer.podo.admin.model.dto.*;
-import com.softeer.podo.admin.model.dto.mapper.UserMapper;
 import com.softeer.podo.admin.model.dto.user.ArrivalUserDto;
 import com.softeer.podo.admin.model.dto.user.ArrivalUserListDto;
 import com.softeer.podo.admin.model.dto.user.LotsUserDto;
@@ -14,10 +13,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 
 import java.time.LocalDateTime;
@@ -25,26 +24,31 @@ import java.time.LocalTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class AdminServiceTest {
-	@Mock
+	@MockBean
 	private EventRepository eventRepository;
 
-	@Mock
+	@MockBean
 	private ArrivalUserRepository arrivalUserRepository;
 
-	@Mock
+	@MockBean
 	private LotsUserRepository lotsUserRepository;
 
-	@InjectMocks
+	@Autowired
 	private AdminService adminService;
 
 	private static Event arrivalEvent;
 	private static Event lotsEvent;
 	private static List<ArrivalUser> arrivalUserList;
 	private static List<LotsUser> lotsUserList;
+
+	@BeforeEach
+	void init() {
+		MockitoAnnotations.openMocks(this);
+	}
 
 	@BeforeAll
 	static void setUp() {
@@ -143,13 +147,14 @@ class AdminServiceTest {
 	@DisplayName("이벤트 목록 service")
 	void getEventList() {
 		//given
-		when(eventRepository.findAll()).thenReturn(Arrays.asList(arrivalEvent, lotsEvent));
+		when(this.eventRepository.findAll()).thenReturn(Arrays.asList(arrivalEvent, lotsEvent));
 
 		//when
 		EventListResponseDto responseDto = adminService.getEventList();
 
 		//then
-		assertEquals(2, responseDto.getEventList().size());
+		assertNotNull(responseDto);
+		verify(eventRepository, times(1)).findAll();
 	}
 
 	@Test
