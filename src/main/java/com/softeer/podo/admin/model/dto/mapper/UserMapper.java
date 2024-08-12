@@ -12,10 +12,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class UserMapper {
 
-	public ArrivalUserListDto ArrivalUserListToArrivalUserListDto(List<ArrivalUser> userList) {
+	public static ArrivalUserListDto ArrivalUserListToArrivalUserListDto(List<ArrivalUser> userList) {
 		List<ArrivalUserDto> arrivalUserDtoList = new ArrayList<>();
 		for(ArrivalUser user : userList) {
 			//reward를 제외한 내용 추가
@@ -32,7 +31,7 @@ public class UserMapper {
 		return new ArrivalUserListDto(arrivalUserDtoList);
 	}
 
-	public LotsUserListDto LotsUserListToLotsUserListDto(List<LotsUser> userList) {
+	public static LotsUserListDto LotsUserListToLotsUserListDto(List<LotsUser> userList) {
 		List<LotsUserDto> lotsUserDtoList = new ArrayList<>();
 		for(LotsUser user : userList) {
 			//reward를 제외한 내용 추가

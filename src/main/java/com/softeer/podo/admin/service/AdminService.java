@@ -11,8 +11,6 @@ import com.softeer.podo.admin.model.entity.Event;
 import com.softeer.podo.admin.model.entity.EventReward;
 import com.softeer.podo.admin.model.exception.EventNotFoundException;
 import com.softeer.podo.admin.repository.EventRepository;
-import com.softeer.podo.admin.repository.EventRewardRepository;
-import com.softeer.podo.admin.repository.EventWeightRepository;
 import com.softeer.podo.admin.model.entity.LotsUser;
 import com.softeer.podo.admin.repository.ArrivalUserRepository;
 import com.softeer.podo.admin.repository.LotsUserRepository;
@@ -26,11 +24,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AdminService {
 	private final EventRepository eventRepository;
-	private final EventRewardRepository eventRewardRepository;
-	private final EventWeightRepository eventWeightRepository;
 	private final LotsUserRepository lotsUserRepository;
 	private final ArrivalUserRepository arrivalUserRepository;
-	private final UserMapper userMapper;
 
 	private final Long arrivalEventId = 1L;
 	private final Long lotsEventId = 2L;
@@ -92,7 +87,7 @@ public class AdminService {
 
 	@Transactional
 	public ArrivalUserListDto getArrivalApplicationList() {
-		ArrivalUserListDto arrivalUserListDto = userMapper.ArrivalUserListToArrivalUserListDto(arrivalUserRepository.findAll());
+		ArrivalUserListDto arrivalUserListDto = UserMapper.ArrivalUserListToArrivalUserListDto(arrivalUserRepository.findAll());
 		//선착순 이벤트 id
 		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
 		List<EventReward> eventRewardList = arrivalEvent.getEventRewardList();
@@ -115,7 +110,7 @@ public class AdminService {
 
 	@Transactional
 	public LotsUserListDto getLotsApplicationList() {
-		return userMapper.LotsUserListToLotsUserListDto(lotsUserRepository.findAll());
+		return UserMapper.LotsUserListToLotsUserListDto(lotsUserRepository.findAll());
 	}
 
 	@Transactional
@@ -172,7 +167,7 @@ public class AdminService {
 	}
 
 	private Event updateEventByConfigDto(Long eventId, EventConfigRequestDto dto) {
-		Event event = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
+		Event event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
 		event.updateTitle(dto.getTitle());
 		event.updateDescription(dto.getDescription());
 		event.updateRepeatDay(dto.getRepeatDay());
