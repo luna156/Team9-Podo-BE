@@ -1,41 +1,149 @@
 package com.softeer.podo.admin.service;
 
 import com.softeer.podo.admin.model.dto.*;
+import com.softeer.podo.admin.model.dto.mapper.UserMapper;
 import com.softeer.podo.admin.model.dto.user.ArrivalUserDto;
 import com.softeer.podo.admin.model.dto.user.ArrivalUserListDto;
+import com.softeer.podo.admin.model.dto.user.LotsUserDto;
 import com.softeer.podo.admin.model.dto.user.LotsUserListDto;
-import com.softeer.podo.admin.model.entity.Event;
-import com.softeer.podo.admin.repository.EventRepository;
-import com.softeer.podo.admin.repository.EventRewardRepository;
+import com.softeer.podo.admin.model.entity.*;
+import com.softeer.podo.admin.repository.*;
+import com.softeer.podo.event.model.entity.LotsComment;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.when;
 
-
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class AdminServiceTest {
-	@Autowired
-	private AdminService adminService;
-	@Autowired
-	private EventRewardRepository eventRewardRepository;
-	@Autowired
+	@Mock
 	private EventRepository eventRepository;
+
+	@Mock
+	private ArrivalUserRepository arrivalUserRepository;
+
+	@Mock
+	private LotsUserRepository lotsUserRepository;
+
+	@InjectMocks
+	private AdminService adminService;
+
+	private static Event arrivalEvent;
+	private static Event lotsEvent;
+	private static List<ArrivalUser> arrivalUserList;
+	private static List<LotsUser> lotsUserList;
+
+	@BeforeAll
+	static void setUp() {
+		// Mock Arrival Event
+		List<EventReward> arrivalEventRewards = new ArrayList<>();
+		arrivalEventRewards.add(
+				EventReward.builder()
+						.numWinners(100)
+						.rewardRank(1)
+						.reward("스타벅스 커피 쿠폰")
+						.event(arrivalEvent)
+						.build()
+		);
+		arrivalEvent = Event.builder()
+				.id(1L)
+				.eventType(EventType.builder().type("arrival").build())
+				.title("셀토스 선착순 이벤트")
+				.description("The 2025 셀토스 출시 기념 선착순 이벤트")
+				.repeatDay("1111100")
+				.repeatTime(LocalTime.from(LocalDateTime.of(2024, 9, 6, 15, 0, 0)))
+				.startAt(LocalDateTime.of(2024, 9, 6, 0, 0, 0))
+				.endAt(LocalDateTime.of(2024, 9, 9, 18, 0, 0))
+				.eventRewardList(arrivalEventRewards)
+				.tagImage("image url")
+				.build();
+
+		// Mock Lots Event
+		List<EventReward> lotsEventRewards = new ArrayList<>();
+		lotsEventRewards.add(
+				EventReward.builder()
+						.numWinners(1)
+						.rewardRank(1)
+						.reward("시그니엘 숙박권")
+						.event(lotsEvent)
+						.build()
+		);
+		lotsEventRewards.add(
+				EventReward.builder()
+						.numWinners(3)
+						.rewardRank(2)
+						.reward("파인다이닝 식사권")
+						.event(lotsEvent)
+						.build()
+		);
+		lotsEventRewards.add(
+				EventReward.builder()
+						.numWinners(10)
+						.rewardRank(3)
+						.reward("현대백화점 상품권")
+						.event(lotsEvent)
+						.build()
+		);
+		EventWeight lotsEventWeight = EventWeight.builder()
+				.times(3)
+				.weightCondition("기대평")
+				.event(lotsEvent)
+				.build();
+		lotsEvent = Event.builder()
+				.id(2L)
+				.eventType(EventType.builder().type("lots").build())
+				.title("셀토스 추첨 이벤트")
+				.description("The 2025 셀토스 출시 기념 추첨 이벤트")
+				.startAt(LocalDateTime.of(2024, 9, 6, 0, 0, 0))
+				.endAt(LocalDateTime.of(2024, 9, 9, 18, 0, 0))
+				.tagImage("image url")
+				.eventRewardList(lotsEventRewards)
+				.eventWeight(lotsEventWeight)
+				.build();
+
+		// User List
+		arrivalUserList = new ArrayList<>();
+		lotsUserList = new ArrayList<>();
+		for(int i = 1; i <= 200; i++){
+			arrivalUserList.add(
+					ArrivalUser.builder()
+							.id((long) i)
+							.name("test_user_"+ i)
+							.arrivalRank(i)
+							.phoneNum("test_phoneNum_" + i)
+							.role(Role.ROLE_USER)
+							.build()
+			);
+			LotsUser lotsUser = LotsUser.builder()
+					.id((long) i)
+					.name("test_user_"+ i)
+					.phoneNum("test_phoneNum_" + i)
+					.role(Role.ROLE_USER)
+					.build();
+			if(i % 3 == 0) lotsUser.setLotsComment(new LotsComment((long) (i / 3), lotsUser, "test_comment_" + i));
+			lotsUserList.add(lotsUser);
+		}
+	}
 
 	@Test
 	@Transactional
 	@DisplayName("이벤트 목록 service")
 	void getEventList() {
 		//given
+		when(eventRepository.findAll()).thenReturn(Arrays.asList(arrivalEvent, lotsEvent));
 
 		//when
 		EventListResponseDto responseDto = adminService.getEventList();
@@ -49,6 +157,7 @@ class AdminServiceTest {
 	@DisplayName("선착순 이벤트 수정 service")
 	void configArrivalEvent() {
 		//given
+		when(eventRepository.findById(1L)).thenReturn(Optional.of(arrivalEvent));
 		String title = "test";
 		String description = "testDescription";
 		String repeatDay = "1111100";
@@ -76,6 +185,7 @@ class AdminServiceTest {
 	@DisplayName("랜덤 추첨 이벤트 수정 service")
 	void configLotsEvent() {
 		//given
+		when(eventRepository.findById(2L)).thenReturn(Optional.of(lotsEvent));
 		String title = "test";
 		String description = "testDescription";
 		String repeatDay = "1111100";
@@ -103,6 +213,8 @@ class AdminServiceTest {
 	@DisplayName("선착순 이벤트 보상 수정 service")
 	void configArrivalEventReward() {
 		//given
+		when(eventRepository.findById(1L)).thenReturn(Optional.of(arrivalEvent));
+		when(arrivalUserRepository.findAll()).thenReturn(arrivalUserList);
 		int rewardNum = 5;
 
 		List<EventRewardDto> eventRewardList = new ArrayList<>();
@@ -140,8 +252,9 @@ class AdminServiceTest {
 	@DisplayName("랜덤추첨 이벤트 보상 수정 service")
 	void configLotsEventReward() {
 		//given
+		when(eventRepository.findById(2L)).thenReturn(Optional.of(lotsEvent));
+		when(lotsUserRepository.findAll()).thenReturn(lotsUserList);
 		int rewardNum = 5;
-
 		List<EventRewardDto> eventRewardList = new ArrayList<>();
 		for(int i = 1 ; i <= rewardNum ; i++) {
 			EventRewardDto rewardDto = new EventRewardDto(i, i, "reward" + i);
@@ -170,5 +283,26 @@ class AdminServiceTest {
 
 	@Test
 	void getLotsResult() {
+		//given
+		when(eventRepository.findById(2L)).thenReturn(Optional.of(lotsEvent));
+		when(lotsUserRepository.findAll()).thenReturn(lotsUserList);
+
+		//when
+		LotsUserListDto responseDto = adminService.getLotsResult();
+
+		//then
+		List<EventReward> eventReward = lotsEvent.getEventRewardList();
+		List<Integer> rewardCount = new ArrayList<>(Collections.nCopies(eventReward.size(), 0));
+		for(LotsUserDto lotsUserDto : responseDto.getApplicationList()){
+			for(int i = 0; i < eventReward.size(); i++){
+				if(lotsUserDto.getReward().equals(eventReward.get(i).getReward())){
+					rewardCount.set(i, rewardCount.get(i) + 1);
+					break;
+				}
+			}
+		}
+		for(int i = 0; i < eventReward.size(); i++){
+			assertEquals(rewardCount.get(i), eventReward.get(i).getNumWinners());
+		}
 	}
 }
