@@ -114,10 +114,10 @@ public class EventLotsService {
         // TODO("여기에 comment 내용 체크용 로직 구현")
 
         LotsUser lotsUser = lotsUserRepository.findByPhoneNum(authInfo.getPhoneNum())
-                .orElseThrow(() -> new ExistingUserException("이미 이벤트에 응모한 유저입니다."));
+                .orElseThrow(() ->  new UserNotExistException("해당 사용자가 아직 이벤트에 응모하지 않았습니다."));
 
         // 이미 comment가 존재할때
-        if(lotsCommentRepository.existsByLotsUser(lotsUser)) {
+        if(lotsUser.getLotsComment() != null) {
             throw new ExistingCommentException("이미 기대평을 작성했습니다.");
         }
 
@@ -125,7 +125,7 @@ public class EventLotsService {
                 .lotsUser(lotsUser)
                 .comment(dto.getComment())
                 .build();
-        lotsCommentRepository.save(comment);
+        lotsUser.setLotsComment(comment);
 
         return new LotsCommentResponseDto(comment);
     }
