@@ -13,7 +13,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,6 +40,9 @@ class AdminServiceTest {
 
 	@MockBean
 	private LotsUserRepository lotsUserRepository;
+
+	@MockBean
+	private EventRewardRepository eventRewardRepository;
 
 	@Autowired
 	private AdminService adminService;
@@ -220,6 +227,19 @@ class AdminServiceTest {
 		//given
 		when(eventRepository.findById(1L)).thenReturn(Optional.of(arrivalEvent));
 		when(arrivalUserRepository.findAll()).thenReturn(arrivalUserList);
+		when(eventRewardRepository.findByEvent(arrivalEvent)).thenReturn(arrivalEvent.getEventRewardList());
+		doAnswer(invocation -> {
+			arrivalEvent.getEventRewardList().clear();
+			return null;
+		}).when(eventRewardRepository).deleteAllInBatch(Mockito.anyList());
+		when(eventRewardRepository.save(any())).thenAnswer(new Answer<EventReward>() {
+			@Override
+			public EventReward answer(InvocationOnMock invocationOnMock) throws Throwable {
+				EventReward eventReward = (EventReward) invocationOnMock.getArguments()[0];
+				arrivalEvent.getEventRewardList().add(eventReward);
+				return null;
+			}
+		});
 		int rewardNum = 5;
 
 		List<EventRewardDto> eventRewardList = new ArrayList<>();
@@ -234,11 +254,10 @@ class AdminServiceTest {
 		ArrivalUserListDto responseDto = adminService.configArrivalEventReward(requestDto);
 
 		//then
-		Event arrivalEvent = eventRepository.findById(1L).orElseThrow();
 		assertEquals(rewardNum, arrivalEvent.getEventRewardList().size());
 
-		for(int i = 0; i < responseDto.getApplicationList().size(); i++){  //보상 확인
-			ArrivalUserDto user = responseDto.getApplicationList().get(i);
+		for(int i = 0; i < responseDto.getArrivalUserList().size(); i++){  //보상 확인
+			ArrivalUserDto user = responseDto.getArrivalUserList().get(i);
 			int rank = user.getRank();
 
 			int winSum = 0;
@@ -259,6 +278,19 @@ class AdminServiceTest {
 		//given
 		when(eventRepository.findById(2L)).thenReturn(Optional.of(lotsEvent));
 		when(lotsUserRepository.findAll()).thenReturn(lotsUserList);
+		when(eventRewardRepository.findByEvent(lotsEvent)).thenReturn(lotsEvent.getEventRewardList());
+		doAnswer(invocation -> {
+			lotsEvent.getEventRewardList().clear();
+			return null;
+		}).when(eventRewardRepository).deleteAllInBatch(Mockito.anyList());
+		when(eventRewardRepository.save(any())).thenAnswer(new Answer<EventReward>() {
+			@Override
+			public EventReward answer(InvocationOnMock invocationOnMock) throws Throwable {
+				EventReward eventReward = (EventReward) invocationOnMock.getArguments()[0];
+				lotsEvent.getEventRewardList().add(eventReward);
+				return null;
+			}
+		});
 		int rewardNum = 5;
 		List<EventRewardDto> eventRewardList = new ArrayList<>();
 		for(int i = 1 ; i <= rewardNum ; i++) {
@@ -274,8 +306,7 @@ class AdminServiceTest {
 		LotsUserListDto responseDto = adminService.configLotsEventReward(requestDto);
 
 		//then
-		Event arrivalEvent = eventRepository.findById(2L).orElseThrow();
-		assertEquals(rewardNum, arrivalEvent.getEventRewardList().size());
+		assertEquals(rewardNum, lotsEvent.getEventRewardList().size());
 	}
 
 	@Test
@@ -298,7 +329,7 @@ class AdminServiceTest {
 		//then
 		List<EventReward> eventReward = lotsEvent.getEventRewardList();
 		List<Integer> rewardCount = new ArrayList<>(Collections.nCopies(eventReward.size(), 0));
-		for(LotsUserDto lotsUserDto : responseDto.getApplicationList()){
+		for(LotsUserDto lotsUserDto : responseDto.getLotsUserList()){
 			for(int i = 0; i < eventReward.size(); i++){
 				if(lotsUserDto.getReward().equals(eventReward.get(i).getReward())){
 					rewardCount.set(i, rewardCount.get(i) + 1);
