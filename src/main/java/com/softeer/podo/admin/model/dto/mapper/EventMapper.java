@@ -11,20 +11,16 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class EventMapper {
-
-	public EventDto EventToEventDto(Event event) {
+	public static EventDto EventToEventDto(Event event) {
 		List<EventRewardDto> eventRewardDtoList = new ArrayList<>();
-		for(EventReward eventReward : event.getEventRewardList()){
-			eventRewardDtoList.add(
-					new EventRewardDto(
-							eventReward.getRewardRank(),
-							eventReward.getNumWinners(),
-							eventReward.getReward()
-					)
-			);
-		}
+		event.getEventRewardList().forEach(eventReward -> eventRewardDtoList.add(
+				new EventRewardDto(
+						eventReward.getRewardRank(),
+						eventReward.getNumWinners(),
+						eventReward.getReward()
+				)
+		));
 		return EventDto.builder()
 				.id(event.getId())
 				.eventType(event.getEventType().getType())
@@ -47,13 +43,11 @@ public class EventMapper {
 				.build();
 	}
 
-	public EventListResponseDto eventListToEventListResponseDto(List<Event> eventList){
-
+	public static EventListResponseDto eventListToEventListResponseDto(List<Event> eventList){
 		List<EventDto> eventDtoList = new ArrayList<>();
-		for (Event event : eventList) {
-			eventDtoList.add(EventToEventDto(event));
-		}
-
+		eventList.forEach(event -> eventDtoList.add(EventToEventDto(event)));
 		return new EventListResponseDto(eventDtoList);
 	}
+
+
 }

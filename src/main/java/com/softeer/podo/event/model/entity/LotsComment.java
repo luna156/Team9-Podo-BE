@@ -18,7 +18,7 @@ public class LotsComment extends DateEntity {
     @Column(name = "comment_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private LotsUser lotsUser;
 

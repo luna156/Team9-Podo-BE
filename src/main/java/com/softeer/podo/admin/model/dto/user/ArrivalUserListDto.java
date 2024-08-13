@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class ArrivalUserListDto {
-	List<ArrivalUserDto> applicationList;
+	List<ArrivalUserDto> arrivalUserList;
 }

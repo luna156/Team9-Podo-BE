@@ -11,10 +11,9 @@ import com.softeer.podo.admin.model.entity.Event;
 import com.softeer.podo.admin.model.entity.EventReward;
 import com.softeer.podo.admin.model.exception.EventNotFoundException;
 import com.softeer.podo.admin.repository.EventRepository;
-import com.softeer.podo.admin.repository.EventRewardRepository;
-import com.softeer.podo.admin.repository.EventWeightRepository;
 import com.softeer.podo.admin.model.entity.LotsUser;
 import com.softeer.podo.admin.repository.ArrivalUserRepository;
+import com.softeer.podo.admin.repository.EventRewardRepository;
 import com.softeer.podo.admin.repository.LotsUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,58 +25,35 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AdminService {
 	private final EventRepository eventRepository;
-	private final EventRewardRepository eventRewardRepository;
-	private final EventWeightRepository eventWeightRepository;
-	private final EventMapper eventMapper;
 	private final LotsUserRepository lotsUserRepository;
 	private final ArrivalUserRepository arrivalUserRepository;
-	private final UserMapper userMapper;
+	private final EventRewardRepository eventRewardRepository;
+
+	private final Long arrivalEventId = 1L;
+	private final Long lotsEventId = 2L;
 
 	@Transactional
 	public EventListResponseDto getEventList() {
-		return eventMapper.eventListToEventListResponseDto(eventRepository.findAll());
+		return EventMapper.eventListToEventListResponseDto(eventRepository.findAll());
 	}
 
 	@Transactional
 	public EventDto configArrivalEvent(EventConfigRequestDto dto) {
-		Event arrivalEvent = eventRepository.findById(1L).orElseThrow(EventNotFoundException::new);
-
-		arrivalEvent.setTitle(dto.getTitle());
-		arrivalEvent.setDescription(dto.getDescription());
-		arrivalEvent.setRepeatDay(dto.getRepeatDay());
-		arrivalEvent.setRepeatTime(dto.getRepeatTime());
-		arrivalEvent.setStartAt(dto.getStartAt());
-		arrivalEvent.setEndAt(dto.getEndAt());
-		arrivalEvent.setTagImage(dto.getTagImage());
-
-		eventRepository.save(arrivalEvent);
-		return eventMapper.EventToEventDto(arrivalEvent);
+		Event arrivalEvent = updateEventByConfigDto(arrivalEventId, dto);
+		return EventMapper.EventToEventDto(arrivalEvent);
 	}
 
 	@Transactional
 	public EventDto configLotsEvent(EventConfigRequestDto dto) {
-		Event lotsEvent =  eventRepository.findById(2L).orElseThrow(EventNotFoundException::new);
-
-		lotsEvent.setTitle(dto.getTitle());
-		lotsEvent.setDescription(dto.getDescription());
-		lotsEvent.setRepeatDay(dto.getRepeatDay());
-		lotsEvent.setRepeatTime(dto.getRepeatTime());
-		lotsEvent.setStartAt(dto.getStartAt());
-		lotsEvent.setEndAt(dto.getEndAt());
-		lotsEvent.setTagImage(dto.getTagImage());
-
-		eventRepository.save(lotsEvent);
-		return eventMapper.EventToEventDto(lotsEvent);
+		Event lotsEvent = updateEventByConfigDto(lotsEventId, dto);
+		return EventMapper.EventToEventDto(lotsEvent);
 	}
 
 	@Transactional
 	public ArrivalUserListDto configArrivalEventReward(EventRewardConfigRequestDto dto) {
-		Event arrivalEvent = eventRepository.findById(1L).orElseThrow(EventNotFoundException::new);
-
-		List<EventReward> arrivalReward = eventRewardRepository.findByEvent(arrivalEvent);
-		eventRewardRepository.deleteAllInBatch(arrivalReward);
-		eventRewardRepository.flush(); // 즉시 데이터베이스에 반영
-
+		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
+		List<EventReward> arrivalRewards = eventRewardRepository.findByEvent(arrivalEvent);
+		eventRewardRepository.deleteAllInBatch(arrivalRewards);
 		for(EventRewardDto rewardDto : dto.getEventRewardList()) {
 			eventRewardRepository.save(
 					EventReward.builder()
@@ -88,17 +64,16 @@ public class AdminService {
 							.build()
 			);
 		}
+		eventRewardRepository.flush(); // 즉시 데이터베이스에 반영
+
 		return getArrivalApplicationList();
 	}
 
 	@Transactional
 	public LotsUserListDto configLotsEventReward(EventRewardConfigRequestDto dto) {
-		Event lotsEvent = eventRepository.findById(2L).orElseThrow(EventNotFoundException::new);
-
-		List<EventReward> lotsReward = eventRewardRepository.findByEvent(lotsEvent);
-		eventRewardRepository.deleteAllInBatch(lotsReward);
-		eventRewardRepository.flush(); // 즉시 데이터베이스에 반영
-
+		Event lotsEvent = eventRepository.findById(lotsEventId).orElseThrow(EventNotFoundException::new);
+		List<EventReward> lotsRewards = eventRewardRepository.findByEvent(lotsEvent);
+		eventRewardRepository.deleteAllInBatch(lotsRewards);
 		for(EventRewardDto rewardDto : dto.getEventRewardList()) {
 			eventRewardRepository.save(
 					EventReward.builder()
@@ -109,31 +84,30 @@ public class AdminService {
 							.build()
 			);
 		}
-
-		lotsEvent.getEventWeight().setWeightCondition(dto.getEventWeight().getCondition());
-		lotsEvent.getEventWeight().setTimes(dto.getEventWeight().getTimes());
-		eventWeightRepository.save(lotsEvent.getEventWeight());
+		lotsEvent.getEventWeight().updateWeightCondition(dto.getEventWeight().getCondition());
+		lotsEvent.getEventWeight().updateTimes(dto.getEventWeight().getTimes());
+		eventRewardRepository.flush(); // 즉시 데이터베이스에 반영
 
 		return getLotsApplicationList();
 	}
 
 	@Transactional
 	public ArrivalUserListDto getArrivalApplicationList() {
-		ArrivalUserListDto arrivalUserListDto = userMapper.ArrivalUserListToArrivalUserListDto(arrivalUserRepository.findAll());
+		ArrivalUserListDto arrivalUserListDto = UserMapper.ArrivalUserListToArrivalUserListDto(arrivalUserRepository.findAll());
 		//선착순 이벤트 id
-		Event arrivalEvent = eventRepository.findById(1L).orElseThrow(EventNotFoundException::new);
+		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
 		List<EventReward> eventRewardList = arrivalEvent.getEventRewardList();
 		// 보상 순위 기준으로 정렬
 		eventRewardList.sort(Comparator.comparingInt(EventReward::getRewardRank));
 
-		for(ArrivalUserDto arrivalUserDto : arrivalUserListDto.getApplicationList()){
+		for (ArrivalUserDto arrivalUserDto : arrivalUserListDto.getArrivalUserList()) {
 			int base = 0; //누적 등수
 			for (EventReward eventReward : eventRewardList) {
 				//해당 상품을 받을 수 있는 등수이면
 				if (arrivalUserDto.getRank() - base <= eventReward.getNumWinners()) {
 					arrivalUserDto.setReward(eventReward.getReward());
 					break;
-				}else arrivalUserDto.setReward("");
+				} else arrivalUserDto.setReward("");
 				base += eventReward.getNumWinners();
 			}
 		}
@@ -142,13 +116,13 @@ public class AdminService {
 
 	@Transactional
 	public LotsUserListDto getLotsApplicationList() {
-		return userMapper.LotsUserListToLotsUserListDto(lotsUserRepository.findAll());
+		return UserMapper.LotsUserListToLotsUserListDto(lotsUserRepository.findAll());
 	}
 
 	@Transactional
-	public LotsUserListDto getLotsResult(){
+	public LotsUserListDto getLotsResult() {
 		//랜덤 추첨 이벤트
-		Event lotsEvent = eventRepository.findById(2L).orElseThrow(EventNotFoundException::new);
+		Event lotsEvent = eventRepository.findById(lotsEventId).orElseThrow(EventNotFoundException::new);
 		//보상 리스트
 		List<EventReward> eventRewardList = lotsEvent.getEventRewardList();
 		//응모 목록
@@ -158,27 +132,30 @@ public class AdminService {
 		int weight = lotsEvent.getEventWeight().getTimes();
 		//전체 가중치합
 		int totalWeight = 0;
-		for(LotsUser lotsUser : lotsUserList){
-			if(lotsUser.getLotsComment() != null){
+		for (LotsUser lotsUser : lotsUserList) {
+			if (lotsUser.getLotsComment() != null) {
 				totalWeight += weight;
-			}else totalWeight++;
+			} else totalWeight++;
 		}
 
 		ArrayList<Boolean> userCheckList = new ArrayList<>(Collections.nCopies(lotsUserList.size(), false));
 		eventRewardList.sort(Comparator.comparingInt(EventReward::getRewardRank));
-		for(EventReward eventReward : eventRewardList){
+		for (EventReward eventReward : eventRewardList) {
+			if(totalWeight <=0) break;
 			//해당 reward 추첨
-			for(int winCount = 0; winCount < eventReward.getNumWinners() && !lotsUserList.isEmpty(); winCount++){
+			for (int winCount = 0; winCount < eventReward.getNumWinners() && !lotsUserList.isEmpty(); winCount++) {
 				long currentTimeMillis = System.currentTimeMillis();
 				Random random = new Random(currentTimeMillis);
 				int randomInt = random.nextInt(totalWeight); // 랜덤 정수
 
 				int weightSum = 0;
-				for(int i = 0; i < lotsUserList.size(); i++){
-					if(userCheckList.get(i)){ continue; }
+				for (int i = 0; i < lotsUserList.size(); i++) {
+					if (userCheckList.get(i)) {
+						continue;
+					}
 					LotsUser lotsUser = lotsUserList.get(i);
 					weightSum += lotsUser.getLotsComment() != null ? weight : 1;
-					if(randomInt < weightSum){
+					if (randomInt < weightSum) {
 						lotsUser.setReward(eventReward.getReward());
 						lotsUserRepository.save(lotsUser);
 						userCheckList.set(i, true);
@@ -189,12 +166,28 @@ public class AdminService {
 			}
 		}
 
-		for(int i = 0; i < lotsUserList.size(); i++) {
-			if(userCheckList.get(i)){ continue; }
+		for (int i = 0; i < lotsUserList.size(); i++) {
+			if (userCheckList.get(i)) {
+				continue;
+			}
 			lotsUserList.get(i).setReward("");
 			lotsUserRepository.save(lotsUserList.get(i));
 		}
 
 		return getLotsApplicationList();
+	}
+
+	private Event updateEventByConfigDto(Long eventId, EventConfigRequestDto dto) {
+		Event event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
+		event.updateEvent(
+				dto.getTitle(),
+				dto.getDescription(),
+				dto.getRepeatDay(),
+				dto.getRepeatTime(),
+				dto.getStartAt(),
+				dto.getEndAt(),
+				dto.getTagImage()
+		);
+		return event;
 	}
 }

@@ -3,15 +3,16 @@ package com.softeer.podo.admin.controller;
 import com.softeer.podo.admin.model.dto.*;
 import com.softeer.podo.admin.model.dto.user.ArrivalUserListDto;
 import com.softeer.podo.admin.model.dto.user.LotsUserListDto;
+import com.softeer.podo.admin.model.entity.validation.LotsValidationSequence;
 import com.softeer.podo.admin.service.AdminService;
 import com.softeer.podo.common.response.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -29,25 +30,25 @@ public class AdminController {
 
 	@PutMapping("/arrival/config")
 	@Operation(summary = "선착순 이벤트 수정 Api")
-	public CommonResponse<EventDto> arrivalEventConfig( @RequestBody EventConfigRequestDto dto){
+	public CommonResponse<EventDto> arrivalEventConfig(@RequestBody @Valid EventConfigRequestDto dto){
 		return new CommonResponse<>(adminService.configArrivalEvent(dto));
 	}
 
 	@PutMapping("/lots/config")
 	@Operation(summary = "랜덤추첨 이벤트 수정 Api")
-	public CommonResponse<EventDto> lotsEventConfig( @RequestBody EventConfigRequestDto dto){
+	public CommonResponse<EventDto> lotsEventConfig(@RequestBody @Valid EventConfigRequestDto dto){
 		return new CommonResponse<>(adminService.configLotsEvent(dto));
 	}
 
 	@PutMapping("/arrival/rewardconfig")
 	@Operation(summary = "선착순 이벤트 상품 수정 Api")
-	public CommonResponse<ArrivalUserListDto> arrivalEventRewardConfig(@RequestBody EventRewardConfigRequestDto dto){
+	public CommonResponse<ArrivalUserListDto> arrivalEventRewardConfig(@RequestBody @Valid EventRewardConfigRequestDto dto){
 		return new CommonResponse<>(adminService.configArrivalEventReward(dto));
 	}
 
 	@PutMapping("/lots/rewardconfig")
 	@Operation(summary = "랜덤추첨 이벤트 상품 수정 Api")
-	public CommonResponse<LotsUserListDto> lotsEventRewardConfig(@RequestBody EventRewardConfigRequestDto dto){
+	public CommonResponse<LotsUserListDto> lotsEventRewardConfig(@RequestBody @Validated(LotsValidationSequence.class) EventRewardConfigRequestDto dto){
 		return new CommonResponse<>(adminService.configLotsEventReward(dto));
 	}
 

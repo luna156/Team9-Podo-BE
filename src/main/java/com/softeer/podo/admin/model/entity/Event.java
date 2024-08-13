@@ -4,10 +4,7 @@ package com.softeer.podo.admin.model.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.softeer.podo.common.entity.DateEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "events")
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -56,4 +53,15 @@ public class Event extends DateEntity {
 
     @OneToOne(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL)
     private EventWeight eventWeight;
+
+    public void updateEvent(String title, String description, String repeatDay, LocalTime repeatTime, LocalDateTime startAt, LocalDateTime endAt, String tagImage) {
+        this.title = title;
+        this.description = description;
+        this.repeatDay = repeatDay;
+        this.repeatTime = repeatTime;
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.tagImage = tagImage;
+    }
+    public void updateEventRewardList(List<EventReward> eventRewardList) {this.eventRewardList = eventRewardList;}
 }
