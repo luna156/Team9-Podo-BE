@@ -30,13 +30,4 @@ public class URLUtils {
     public static String decode(String value) throws UnsupportedEncodingException {
         return URLDecoder.decode(value, StandardCharsets.UTF_8);
     }
-
-    public static void main(String[] args) {
-        try {
-            String uniqueLink = "V1a1Vrqe1oBYCkqkXs7/Uw==";
-            String encodedLink = encode(uniqueLink);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
 }
