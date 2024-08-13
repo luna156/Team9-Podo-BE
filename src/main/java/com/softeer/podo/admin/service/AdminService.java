@@ -141,6 +141,7 @@ public class AdminService {
 		ArrayList<Boolean> userCheckList = new ArrayList<>(Collections.nCopies(lotsUserList.size(), false));
 		eventRewardList.sort(Comparator.comparingInt(EventReward::getRewardRank));
 		for (EventReward eventReward : eventRewardList) {
+			if(totalWeight <=0) break;
 			//해당 reward 추첨
 			for (int winCount = 0; winCount < eventReward.getNumWinners() && !lotsUserList.isEmpty(); winCount++) {
 				long currentTimeMillis = System.currentTimeMillis();
