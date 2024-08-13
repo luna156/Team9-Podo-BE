@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class LotsUserListDto {
+public class LotsUserListDto implements UserListDto {
 	int totalPage;
 	int currentPage;
 	List<LotsUserDto> lotsUserList;
