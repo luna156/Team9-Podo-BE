@@ -20,7 +20,7 @@ public class LotsUser extends DateEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "result_id")
     private TestResult testResult;
 
@@ -32,6 +32,6 @@ public class LotsUser extends DateEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
     @Setter
-    @OneToOne(mappedBy = "lotsUser", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "lotsUser", orphanRemoval = true, cascade = CascadeType.ALL)
     private LotsComment lotsComment;
 }
