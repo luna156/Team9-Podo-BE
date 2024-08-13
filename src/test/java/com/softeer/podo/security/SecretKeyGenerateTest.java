@@ -1,4 +1,4 @@
-package com.softeer.podo.common;
+package com.softeer.podo.security;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
