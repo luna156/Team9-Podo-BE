@@ -7,16 +7,16 @@ import com.softeer.podo.admin.model.dto.user.LotsUserDto;
 import com.softeer.podo.admin.model.dto.user.LotsUserListDto;
 import com.softeer.podo.admin.model.entity.ArrivalUser;
 import com.softeer.podo.admin.model.entity.LotsUser;
-import org.springframework.stereotype.Component;
+import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserMapper {
 
-	public static ArrivalUserListDto ArrivalUserListToArrivalUserListDto(List<ArrivalUser> userList) {
+	public static ArrivalUserListDto ArrivalUserPageToArrivalUserListDto(Page<ArrivalUser> userPage) {
 		List<ArrivalUserDto> arrivalUserDtoList = new ArrayList<>();
-		for(ArrivalUser user : userList) {
+		for(ArrivalUser user : userPage.getContent()) {
 			//reward를 제외한 내용 추가
 			arrivalUserDtoList.add(
 					ArrivalUserDto.builder()
@@ -28,12 +28,12 @@ public class UserMapper {
 							.build()
 			);
 		}
-		return new ArrivalUserListDto(arrivalUserDtoList);
+		return new ArrivalUserListDto(userPage.getTotalPages(), userPage.getNumber(), arrivalUserDtoList);
 	}
 
-	public static LotsUserListDto LotsUserListToLotsUserListDto(List<LotsUser> userList) {
+	public static LotsUserListDto LotsUserPageToLotsUserListDto(Page<LotsUser> userPage) {
 		List<LotsUserDto> lotsUserDtoList = new ArrayList<>();
-		for(LotsUser user : userList) {
+		for(LotsUser user : userPage.getContent()) {
 			//reward를 제외한 내용 추가
 			lotsUserDtoList.add(
 					LotsUserDto.builder()
@@ -45,6 +45,6 @@ public class UserMapper {
 							.build()
 			);
 		}
-		return new LotsUserListDto(lotsUserDtoList);
+		return new LotsUserListDto(userPage.getTotalPages(), userPage.getNumber(), lotsUserDtoList);
 	}
 }

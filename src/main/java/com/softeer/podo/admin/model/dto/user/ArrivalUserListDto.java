@@ -8,5 +8,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class ArrivalUserListDto {
+	int totalPage;
+	int currentPage;
 	List<ArrivalUserDto> arrivalUserList;
 }

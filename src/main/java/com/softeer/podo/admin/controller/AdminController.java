@@ -54,14 +54,14 @@ public class AdminController {
 
 	@GetMapping("/arrival/applicationList")
 	@Operation(summary = "선착순 응모 인원 반환 Api")
-	public CommonResponse<ArrivalUserListDto> arrivalApplicationList(){
-		return new CommonResponse<>(adminService.getArrivalApplicationList());
+	public CommonResponse<ArrivalUserListDto> arrivalApplicationList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo){
+		return new CommonResponse<>(adminService.getArrivalApplicationList(pageNo));
 	}
 
 	@GetMapping("/lots/applicationList")
 	@Operation(summary = "랜덤추첨 응모 인원 반환 Api")
-	public CommonResponse<LotsUserListDto> lotsApplicationList(){
-		return new CommonResponse<>(adminService.getLotsApplicationList());
+	public CommonResponse<LotsUserListDto> lotsApplicationList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo){
+		return new CommonResponse<>(adminService.getLotsApplicationList(pageNo));
 	}
 
 	@GetMapping("/lots/pickrandom")
