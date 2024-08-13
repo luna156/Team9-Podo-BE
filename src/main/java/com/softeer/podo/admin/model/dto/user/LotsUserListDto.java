@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class LotsUserListDto {
-	List<LotsUserDto> applicationList;
+	List<LotsUserDto> lotsUserList;
 }
