@@ -48,17 +48,20 @@ public class Event extends DateEntity {
     @Column(name = "tag_image")
     private String tagImage;
 
-    @OneToMany(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL)
     private List<EventReward> eventRewardList;
 
-    @OneToOne(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL)
     private EventWeight eventWeight;
 
-    public void updateTitle(String title) {this.title = title;}
-    public void updateDescription(String description) {this.description = description;}
-    public void updateRepeatDay(String repeatDay) {this.repeatDay = repeatDay;}
-    public void updateRepeatTime(LocalTime repeatTime) {this.repeatTime = repeatTime;}
-    public void updateStartAt(LocalDateTime startAt) {this.startAt = startAt;}
-    public void updateEndAt(LocalDateTime endAt) {this.endAt = endAt;}
-    public void updateTagImage(String tagImage) {this.tagImage = tagImage;}
+    public void updateEvent(String title, String description, String repeatDay, LocalTime repeatTime, LocalDateTime startAt, LocalDateTime endAt, String tagImage) {
+        this.title = title;
+        this.description = description;
+        this.repeatDay = repeatDay;
+        this.repeatTime = repeatTime;
+        this.startAt = startAt;
+        this.endAt = endAt;
+        this.tagImage = tagImage;
+    }
+    public void updateEventRewardList(List<EventReward> eventRewardList) {this.eventRewardList = eventRewardList;}
 }
