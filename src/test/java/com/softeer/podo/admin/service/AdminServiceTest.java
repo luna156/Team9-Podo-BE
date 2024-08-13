@@ -257,7 +257,8 @@ class AdminServiceTest {
 		EventRewardConfigResponseDto responseDto = adminService.configArrivalEventReward(requestDto);
 
 		//then
-		assertEquals(rewardNum, arrivalEvent.getEventRewardList().size());
+		assertEquals(eventRewardList, responseDto.getEventRewards());
+
 		ArrivalUserListDto arrivalUserListPageDto = (ArrivalUserListDto) responseDto.getUserListPage();
 		for(int i = 0; i < arrivalUserListPageDto.getArrivalUserList().size(); i++){  //보상 확인
 			ArrivalUserDto user = arrivalUserListPageDto.getArrivalUserList().get(i);
@@ -305,14 +306,17 @@ class AdminServiceTest {
 		}
 		EventRewardConfigRequestDto requestDto = new EventRewardConfigRequestDto();
 		requestDto.setEventRewardList(eventRewardList);
-		requestDto.setEventWeight(new EventWeightDto(3, "comment"));
+
+		EventWeightDto eventWeight = new EventWeightDto(3, "comment");
+		requestDto.setEventWeight(eventWeight);
 
 
 		//when
 		EventRewardConfigResponseDto responseDto = adminService.configLotsEventReward(requestDto);
 
 		//then
-		assertEquals(rewardNum, lotsEvent.getEventRewardList().size());
+		assertEquals(eventRewardList, responseDto.getEventRewards());
+		assertEquals(eventWeight, responseDto.getEventWeight());
 	}
 
 	@Test
