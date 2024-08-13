@@ -6,6 +6,7 @@ import com.softeer.podo.admin.model.dto.EventRewardDto;
 import com.softeer.podo.admin.model.dto.EventWeightDto;
 import com.softeer.podo.admin.model.entity.Event;
 import com.softeer.podo.admin.model.entity.EventReward;
+import com.softeer.podo.admin.model.entity.EventWeight;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -49,5 +50,11 @@ public class EventMapper {
 		return new EventListResponseDto(eventDtoList);
 	}
 
+	public static EventRewardDto eventRewardToEventRewardDto(EventReward eventReward){
+		return new EventRewardDto(eventReward.getRewardRank(), eventReward.getNumWinners(), eventReward.getReward());
+	}
 
+	public static EventWeightDto eventWeightToEventWeightDto(EventWeight eventWeight){
+		return new EventWeightDto(eventWeight.getTimes(), eventWeight.getWeightCondition());
+	}
 }

@@ -56,32 +56,40 @@ public class AdminService {
 	}
 
 	@Transactional
-	public ArrivalUserListDto configArrivalEventReward(EventRewardConfigRequestDto dto) {
+	public EventRewardConfigResponseDto configArrivalEventReward(EventRewardConfigRequestDto dto) {
 		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
 		List<EventReward> arrivalRewards = eventRewardRepository.findByEvent(arrivalEvent);
 		eventRewardRepository.deleteAllInBatch(arrivalRewards);
+
+		List<EventReward> lotsRewardList = new ArrayList<>();
 		for(EventRewardDto rewardDto : dto.getEventRewardList()) {
-			eventRewardRepository.save(
-					EventReward.builder()
-							.event(arrivalEvent)
+			lotsRewardList.add(
+					EventReward.builder().event(arrivalEvent)
 							.reward(rewardDto.getReward())
 							.rewardRank(rewardDto.getRank())
 							.numWinners(rewardDto.getNumWinners())
-							.build()
-			);
-		}
-		eventRewardRepository.flush(); // 즉시 데이터베이스에 반영
+							.build());
 
-		return getArrivalApplicationList(0);
+		}
+		eventRewardRepository.saveAllAndFlush(lotsRewardList);
+
+		List<EventRewardDto> eventRewardDtoList =
+				lotsRewardList.stream()
+						.map(EventMapper::eventRewardToEventRewardDto)
+						.toList();
+
+		return new EventRewardConfigResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0));
 	}
 
 	@Transactional
-	public LotsUserListDto configLotsEventReward(EventRewardConfigRequestDto dto) {
+	public EventRewardConfigResponseDto configLotsEventReward(EventRewardConfigRequestDto dto) {
 		Event lotsEvent = eventRepository.findById(lotsEventId).orElseThrow(EventNotFoundException::new);
 		List<EventReward> lotsRewards = eventRewardRepository.findByEvent(lotsEvent);
 		eventRewardRepository.deleteAllInBatch(lotsRewards);
+
+		List<EventReward> lotsRewardList = new ArrayList<>();
 		for(EventRewardDto rewardDto : dto.getEventRewardList()) {
-			eventRewardRepository.save(
+			lotsRewardList.add(
 					EventReward.builder()
 							.event(lotsEvent)
 							.reward(rewardDto.getReward())
@@ -90,11 +98,18 @@ public class AdminService {
 							.build()
 			);
 		}
+		eventRewardRepository.saveAll(lotsRewardList);
 		lotsEvent.getEventWeight().updateWeightCondition(dto.getEventWeight().getCondition());
 		lotsEvent.getEventWeight().updateTimes(dto.getEventWeight().getTimes());
 		eventRewardRepository.flush(); // 즉시 데이터베이스에 반영
 
-		return getLotsApplicationList(0);
+		List<EventRewardDto> eventRewardDtoList =
+				lotsRewardList.stream()
+						.map(EventMapper::eventRewardToEventRewardDto)
+						.toList();
+		EventWeightDto eventWeightDto = EventMapper.eventWeightToEventWeightDto(lotsEvent.getEventWeight());
+
+		return new EventRewardConfigResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0));
 	}
 
 	@Transactional
