@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -21,6 +20,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 
 
 import java.time.LocalDateTime;
@@ -225,6 +225,9 @@ class AdminServiceTest {
 	@DisplayName("선착순 이벤트 보상 수정 service")
 	void configArrivalEventReward() {
 		//given
+		Pageable pageable = PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "id"));
+		Page<ArrivalUser> arrivalUserPage = new PageImpl<>(arrivalUserList, pageable, arrivalUserList.size());
+		when(arrivalUserRepository.findAll((Pageable) any())).thenReturn(arrivalUserPage);
 		when(eventRepository.findById(1L)).thenReturn(Optional.of(arrivalEvent));
 		when(arrivalUserRepository.findAll()).thenReturn(arrivalUserList);
 		when(eventRewardRepository.findByEvent(arrivalEvent)).thenReturn(arrivalEvent.getEventRewardList());
@@ -232,11 +235,11 @@ class AdminServiceTest {
 			arrivalEvent.getEventRewardList().clear();
 			return null;
 		}).when(eventRewardRepository).deleteAllInBatch(Mockito.anyList());
-		when(eventRewardRepository.save(any())).thenAnswer(new Answer<EventReward>() {
+		when(eventRewardRepository.saveAllAndFlush(any())).thenAnswer(new Answer<List<EventReward>>() {
 			@Override
-			public EventReward answer(InvocationOnMock invocationOnMock) throws Throwable {
-				EventReward eventReward = (EventReward) invocationOnMock.getArguments()[0];
-				arrivalEvent.getEventRewardList().add(eventReward);
+			public List<EventReward> answer(InvocationOnMock invocationOnMock) throws Throwable {
+				List<EventReward> eventReward = (List<EventReward>) invocationOnMock.getArguments()[0];
+				arrivalEvent.updateEventRewardList(eventReward);
 				return null;
 			}
 		});
@@ -251,13 +254,13 @@ class AdminServiceTest {
 		requestDto.setEventRewardList(eventRewardList);
 
 		//when
-		ArrivalUserListDto responseDto = adminService.configArrivalEventReward(requestDto);
+		EventRewardConfigResponseDto responseDto = adminService.configArrivalEventReward(requestDto);
 
 		//then
 		assertEquals(rewardNum, arrivalEvent.getEventRewardList().size());
-
-		for(int i = 0; i < responseDto.getArrivalUserList().size(); i++){  //보상 확인
-			ArrivalUserDto user = responseDto.getArrivalUserList().get(i);
+		ArrivalUserListDto arrivalUserListPageDto = (ArrivalUserListDto) responseDto.getUserListPage();
+		for(int i = 0; i < arrivalUserListPageDto.getArrivalUserList().size(); i++){  //보상 확인
+			ArrivalUserDto user = arrivalUserListPageDto.getArrivalUserList().get(i);
 			int rank = user.getRank();
 
 			int winSum = 0;
@@ -276,6 +279,9 @@ class AdminServiceTest {
 	@DisplayName("랜덤추첨 이벤트 보상 수정 service")
 	void configLotsEventReward() {
 		//given
+		Pageable pageable = PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "id"));
+		Page<LotsUser> lotsUserPage = new PageImpl<>(lotsUserList, pageable, lotsUserList.size());
+		when(lotsUserRepository.findAll((Pageable) any())).thenReturn(lotsUserPage);
 		when(eventRepository.findById(2L)).thenReturn(Optional.of(lotsEvent));
 		when(lotsUserRepository.findAll()).thenReturn(lotsUserList);
 		when(eventRewardRepository.findByEvent(lotsEvent)).thenReturn(lotsEvent.getEventRewardList());
@@ -283,11 +289,11 @@ class AdminServiceTest {
 			lotsEvent.getEventRewardList().clear();
 			return null;
 		}).when(eventRewardRepository).deleteAllInBatch(Mockito.anyList());
-		when(eventRewardRepository.save(any())).thenAnswer(new Answer<EventReward>() {
+		when(eventRewardRepository.saveAll(any())).thenAnswer(new Answer<List<EventReward>>() {
 			@Override
-			public EventReward answer(InvocationOnMock invocationOnMock) throws Throwable {
-				EventReward eventReward = (EventReward) invocationOnMock.getArguments()[0];
-				lotsEvent.getEventRewardList().add(eventReward);
+			public List<EventReward> answer(InvocationOnMock invocationOnMock) throws Throwable {
+				List<EventReward> eventRewards = (List<EventReward>) invocationOnMock.getArguments()[0];
+				lotsEvent.updateEventRewardList(eventRewards);
 				return null;
 			}
 		});
@@ -303,7 +309,7 @@ class AdminServiceTest {
 
 
 		//when
-		LotsUserListDto responseDto = adminService.configLotsEventReward(requestDto);
+		EventRewardConfigResponseDto responseDto = adminService.configLotsEventReward(requestDto);
 
 		//then
 		assertEquals(rewardNum, lotsEvent.getEventRewardList().size());
@@ -320,8 +326,11 @@ class AdminServiceTest {
 	@Test
 	void getLotsResult() {
 		//given
+		Pageable pageable = PageRequest.of(0, 100, Sort.by(Sort.Direction.DESC, "id"));
+		Page<LotsUser> lotsUserPage = new PageImpl<>(lotsUserList, pageable, lotsUserList.size());
 		when(eventRepository.findById(2L)).thenReturn(Optional.of(lotsEvent));
 		when(lotsUserRepository.findAll()).thenReturn(lotsUserList);
+		when(lotsUserRepository.findAll((Pageable) any())).thenReturn(lotsUserPage);
 
 		//when
 		LotsUserListDto responseDto = adminService.getLotsResult();
