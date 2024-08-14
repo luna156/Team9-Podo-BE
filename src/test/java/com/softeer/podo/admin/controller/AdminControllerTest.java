@@ -158,7 +158,7 @@ class AdminControllerTest {
 		assertEquals(true, response.get("isSuccess"));
 		assertEquals(200, response.get("code"));
 
-		JSONArray applicationArray = response.getJSONObject("result").getJSONArray("arrivalUserList");
+		JSONArray applicationArray = response.getJSONObject("result").getJSONObject("userListPage").getJSONArray("arrivalUserList");
 		for(int i = 0; i < applicationArray.length(); i++){  //보상 확인
 			JSONObject user = applicationArray.getJSONObject(i);
 			int rank = user.getInt("rank");
