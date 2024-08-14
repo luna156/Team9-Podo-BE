@@ -1,4 +1,4 @@
-package com.softeer.podo.event.model.dto;
+package com.softeer.podo.event.model.dto.request;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

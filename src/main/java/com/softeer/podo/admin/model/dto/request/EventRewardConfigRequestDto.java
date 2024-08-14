@@ -1,5 +1,7 @@
-package com.softeer.podo.admin.model.dto;
+package com.softeer.podo.admin.model.dto.request;
 
+import com.softeer.podo.admin.model.dto.EventRewardDto;
+import com.softeer.podo.admin.model.dto.EventWeightDto;
 import com.softeer.podo.admin.model.entity.validation.ValidationGroups;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -19,5 +21,5 @@ public class EventRewardConfigRequestDto {
 
 	@Valid
 	@NotNull(message = "가중치가 비어있습니다.", groups = ValidationGroups.LotsRewardValidation.class)
-	EventWeightDto eventWeight;
+    EventWeightDto eventWeight;
 }

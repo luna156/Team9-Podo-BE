@@ -2,10 +2,14 @@ package com.softeer.podo.admin.service;
 
 
 import com.softeer.podo.admin.model.dto.*;
+import com.softeer.podo.admin.model.dto.request.EventConfigRequestDto;
+import com.softeer.podo.admin.model.dto.request.EventRewardConfigRequestDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
+import com.softeer.podo.admin.model.dto.response.EventRewardConfigResponseDto;
 import com.softeer.podo.admin.model.dto.user.ArrivalUserDto;
 import com.softeer.podo.admin.model.dto.user.ArrivalUserListDto;
-import com.softeer.podo.admin.model.dto.mapper.EventMapper;
-import com.softeer.podo.admin.model.dto.mapper.UserMapper;
+import com.softeer.podo.admin.mapper.EventMapper;
+import com.softeer.podo.admin.mapper.UserMapper;
 import com.softeer.podo.admin.model.dto.user.LotsUserListDto;
 import com.softeer.podo.admin.model.entity.ArrivalUser;
 import com.softeer.podo.admin.model.entity.Event;

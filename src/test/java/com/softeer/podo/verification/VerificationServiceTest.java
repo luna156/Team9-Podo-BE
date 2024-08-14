@@ -1,16 +1,12 @@
 package com.softeer.podo.verification;
 
 import com.softeer.podo.common.VerificationServiceBase;
-import com.softeer.podo.verification.exception.TokenNotMatchException;
-import com.softeer.podo.verification.model.dto.CheckVerificationRequestDto;
-import com.softeer.podo.verification.model.dto.CheckVerificationResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 public class VerificationServiceTest extends VerificationServiceBase {
 

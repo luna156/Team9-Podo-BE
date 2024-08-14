@@ -1,5 +1,6 @@
-package com.softeer.podo.admin.model.dto;
+package com.softeer.podo.admin.model.dto.response;
 
+import com.softeer.podo.admin.model.dto.EventDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

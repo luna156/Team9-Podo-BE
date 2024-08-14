@@ -1,4 +1,4 @@
-package com.softeer.podo.event.model.dto;
+package com.softeer.podo.event.model.dto.response;
 
 
 import com.softeer.podo.event.model.entity.LotsComment;

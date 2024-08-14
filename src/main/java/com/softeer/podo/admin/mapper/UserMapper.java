@@ -1,4 +1,4 @@
-package com.softeer.podo.admin.model.dto.mapper;
+package com.softeer.podo.admin.mapper;
 
 
 import com.softeer.podo.admin.model.dto.user.ArrivalUserDto;

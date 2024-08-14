@@ -1,4 +1,4 @@
-package com.softeer.podo.admin.model.dto;
+package com.softeer.podo.admin.model.dto.request;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;

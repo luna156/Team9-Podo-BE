@@ -5,9 +5,9 @@ import com.softeer.podo.common.VerificationFacadeBase;
 import com.softeer.podo.common.utils.NumberUtils;
 import com.softeer.podo.security.jwt.TokenInfo;
 import com.softeer.podo.verification.exception.TokenNotMatchException;
-import com.softeer.podo.verification.model.dto.CheckVerificationRequestDto;
-import com.softeer.podo.verification.model.dto.CheckVerificationResponseDto;
-import com.softeer.podo.verification.model.dto.ClaimVerificationRequestDto;
+import com.softeer.podo.verification.model.dto.request.CheckVerificationRequestDto;
+import com.softeer.podo.verification.model.dto.response.CheckVerificationResponseDto;
+import com.softeer.podo.verification.model.dto.request.ClaimVerificationRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

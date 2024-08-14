@@ -1,6 +1,10 @@
 package com.softeer.podo.admin.controller;
 
 import com.softeer.podo.admin.model.dto.*;
+import com.softeer.podo.admin.model.dto.request.EventConfigRequestDto;
+import com.softeer.podo.admin.model.dto.request.EventRewardConfigRequestDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
+import com.softeer.podo.admin.model.dto.response.EventRewardConfigResponseDto;
 import com.softeer.podo.admin.model.dto.user.ArrivalUserListDto;
 import com.softeer.podo.admin.model.dto.user.LotsUserListDto;
 import com.softeer.podo.admin.model.entity.validation.LotsValidationSequence;

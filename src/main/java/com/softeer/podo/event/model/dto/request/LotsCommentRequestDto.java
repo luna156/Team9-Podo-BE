@@ -1,15 +1,17 @@
-package com.softeer.podo.event.model.dto;
+package com.softeer.podo.event.model.dto.request;
 
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LotsApplicationResponseDto {
+public class LotsCommentRequestDto {
     @NotBlank
-    private String uniqueLink;
+    private String comment;
 }

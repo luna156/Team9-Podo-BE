@@ -1,6 +1,6 @@
 package com.softeer.podo.event.model.dto.mapper;
 
-import com.softeer.podo.event.model.dto.LotsTypeResponseDto;
+import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
 import com.softeer.podo.event.model.dto.ScenarioDto;
 import com.softeer.podo.event.model.entity.TestResult;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.softeer.podo.event.model.dto;
+package com.softeer.podo.event.model.dto.request;
 
 
 import jakarta.validation.constraints.Max;

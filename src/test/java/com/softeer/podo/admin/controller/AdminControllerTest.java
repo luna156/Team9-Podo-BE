@@ -2,11 +2,11 @@ package com.softeer.podo.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softeer.podo.admin.model.dto.*;
+import com.softeer.podo.admin.model.dto.request.EventConfigRequestDto;
+import com.softeer.podo.admin.model.dto.request.EventRewardConfigRequestDto;
 import jakarta.transaction.Transactional;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

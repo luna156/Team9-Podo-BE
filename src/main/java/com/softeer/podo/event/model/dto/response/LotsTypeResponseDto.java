@@ -1,6 +1,7 @@
-package com.softeer.podo.event.model.dto;
+package com.softeer.podo.event.model.dto.response;
 
 
+import com.softeer.podo.event.model.dto.ScenarioDto;
 import com.softeer.podo.event.util.Result;
 import lombok.AllArgsConstructor;
 import lombok.Data;

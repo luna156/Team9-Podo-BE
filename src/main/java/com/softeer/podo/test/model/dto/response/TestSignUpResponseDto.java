@@ -1,4 +1,4 @@
-package com.softeer.podo.test.model.dto;
+package com.softeer.podo.test.model.dto.response;
 
 import com.softeer.podo.admin.model.entity.Role;
 import lombok.AllArgsConstructor;

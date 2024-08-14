@@ -1,4 +1,4 @@
-package com.softeer.podo.verification.model.dto;
+package com.softeer.podo.verification.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,8 +1,8 @@
 package com.softeer.podo.event.controller;
 
 import com.softeer.podo.common.response.CommonResponse;
-import com.softeer.podo.event.model.dto.LotsTypeRequestDto;
-import com.softeer.podo.event.model.dto.LotsTypeResponseDto;
+import com.softeer.podo.event.model.dto.request.LotsTypeRequestDto;
+import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
 import com.softeer.podo.event.service.EventLotsService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
