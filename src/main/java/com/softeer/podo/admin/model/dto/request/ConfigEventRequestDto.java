@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventConfigRequestDto {
+public class ConfigEventRequestDto {
 
 	@NotBlank(message = "title이 존재하지 않습니다.")
 	private String title;

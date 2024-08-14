@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventRewardConfigRequestDto {
+public class ConfigEventRewardRequestDto {
 
 	@NotEmpty(message = "상품 리스트가 비어있습니다.")
 	@Valid

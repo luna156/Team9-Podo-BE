@@ -2,10 +2,10 @@ package com.softeer.podo.admin.service;
 
 
 import com.softeer.podo.admin.model.dto.*;
-import com.softeer.podo.admin.model.dto.request.EventConfigRequestDto;
-import com.softeer.podo.admin.model.dto.request.EventRewardConfigRequestDto;
+import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
+import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
 import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
-import com.softeer.podo.admin.model.dto.response.EventRewardConfigResponseDto;
+import com.softeer.podo.admin.model.dto.response.ConfigEventRewardResponseDto;
 import com.softeer.podo.admin.model.dto.ArrivalUserDto;
 import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
 import com.softeer.podo.admin.model.mapper.EventMapper;
@@ -48,19 +48,19 @@ public class AdminService {
 	}
 
 	@Transactional
-	public EventDto configArrivalEvent(EventConfigRequestDto dto) {
+	public EventDto configArrivalEvent(ConfigEventRequestDto dto) {
 		Event arrivalEvent = updateEventByConfigDto(arrivalEventId, dto);
 		return EventMapper.EventToEventDto(arrivalEvent);
 	}
 
 	@Transactional
-	public EventDto configLotsEvent(EventConfigRequestDto dto) {
+	public EventDto configLotsEvent(ConfigEventRequestDto dto) {
 		Event lotsEvent = updateEventByConfigDto(lotsEventId, dto);
 		return EventMapper.EventToEventDto(lotsEvent);
 	}
 
 	@Transactional
-	public EventRewardConfigResponseDto configArrivalEventReward(EventRewardConfigRequestDto dto) {
+	public ConfigEventRewardResponseDto configArrivalEventReward(ConfigEventRewardRequestDto dto) {
 		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
 		List<EventReward> arrivalRewards = eventRewardRepository.findByEvent(arrivalEvent);
 		eventRewardRepository.deleteAllInBatch(arrivalRewards);
@@ -82,11 +82,11 @@ public class AdminService {
 						.map(EventMapper::eventRewardToEventRewardDto)
 						.toList();
 
-		return new EventRewardConfigResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0));
+		return new ConfigEventRewardResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0));
 	}
 
 	@Transactional
-	public EventRewardConfigResponseDto configLotsEventReward(EventRewardConfigRequestDto dto) {
+	public ConfigEventRewardResponseDto configLotsEventReward(ConfigEventRewardRequestDto dto) {
 		Event lotsEvent = eventRepository.findById(lotsEventId).orElseThrow(EventNotFoundException::new);
 		List<EventReward> lotsRewards = eventRewardRepository.findByEvent(lotsEvent);
 		eventRewardRepository.deleteAllInBatch(lotsRewards);
@@ -113,7 +113,7 @@ public class AdminService {
 						.toList();
 		EventWeightDto eventWeightDto = EventMapper.eventWeightToEventWeightDto(lotsEvent.getEventWeight());
 
-		return new EventRewardConfigResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0));
+		return new ConfigEventRewardResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0));
 	}
 
 	@Transactional
@@ -206,7 +206,7 @@ public class AdminService {
 		return getLotsApplicationList(0);
 	}
 
-	private Event updateEventByConfigDto(Long eventId, EventConfigRequestDto dto) {
+	private Event updateEventByConfigDto(Long eventId, ConfigEventRequestDto dto) {
 		Event event = eventRepository.findById(eventId).orElseThrow(EventNotFoundException::new);
 		event.updateEvent(
 				dto.getTitle(),

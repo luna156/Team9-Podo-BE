@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class EventRewardConfigResponseDto {
+public class ConfigEventRewardResponseDto {
 	private List<EventRewardDto> eventRewards;
 	@Nullable
 	private EventWeightDto eventWeight;

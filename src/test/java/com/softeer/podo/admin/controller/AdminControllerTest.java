@@ -2,8 +2,8 @@ package com.softeer.podo.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.softeer.podo.admin.model.dto.*;
-import com.softeer.podo.admin.model.dto.request.EventConfigRequestDto;
-import com.softeer.podo.admin.model.dto.request.EventRewardConfigRequestDto;
+import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
+import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
 import jakarta.transaction.Transactional;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -65,7 +65,7 @@ class AdminControllerTest {
 		LocalDateTime startAt = LocalDateTime.of(2024, 9, 6, 13, 0);
 		LocalDateTime endAt = LocalDateTime.of(2024, 9, 6, 13, 0);
 		String tagImage = "image url";
-		EventConfigRequestDto dto = new EventConfigRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
+		ConfigEventRequestDto dto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
 		String json = mapper.writeValueAsString(dto);
 
 		//when
@@ -103,7 +103,7 @@ class AdminControllerTest {
 		LocalDateTime startAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		LocalDateTime endAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		String tagImage = "image url";
-		EventConfigRequestDto dto = new EventConfigRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
+		ConfigEventRequestDto dto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
 		String json = mapper.writeValueAsString(dto);
 
 		//when
@@ -141,7 +141,7 @@ class AdminControllerTest {
 			EventRewardDto rewardDto = new EventRewardDto(i, i, "reward" + i);
 			eventRewardList.add(rewardDto);
 		}
-		EventRewardConfigRequestDto dto = new EventRewardConfigRequestDto();
+		ConfigEventRewardRequestDto dto = new ConfigEventRewardRequestDto();
 		dto.setEventRewardList(eventRewardList);
 		String json = mapper.writeValueAsString(dto);
 
@@ -186,7 +186,7 @@ class AdminControllerTest {
 			EventRewardDto rewardDto = new EventRewardDto(i, i, "reward" + i);
 			eventRewardList.add(rewardDto);
 		}
-		EventRewardConfigRequestDto dto = new EventRewardConfigRequestDto();
+		ConfigEventRewardRequestDto dto = new ConfigEventRewardRequestDto();
 		dto.setEventRewardList(eventRewardList);
 		dto.setEventWeight(new EventWeightDto(3, "comment"));
 		String json = mapper.writeValueAsString(dto);
