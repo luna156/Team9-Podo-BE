@@ -27,14 +27,14 @@ public class ExceptionHandleFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (InvalidTokenException exception) {
             setErrorResponse(
-                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.FORBIDDEN,
                     ErrorCode.INVALID_ACCESS_TOKEN_ERROR,
                     request, response, exception, "TOKEN-ERROR-01"
             );
 
         } catch (EmptyTokenException exception) {
             setErrorResponse(
-                    HttpStatus.BAD_REQUEST,
+                    HttpStatus.FORBIDDEN,
                     ErrorCode.INVALID_ACCESS_TOKEN_ERROR,
                     request, response, exception, "TOKEN-ERROR-02"
             );

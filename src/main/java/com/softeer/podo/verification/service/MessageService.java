@@ -38,7 +38,7 @@ public class MessageService {
         Message message = new Message();
         message.setFrom(MESSAGE_SENDER);
         message.setTo(phoneNum);
-        message.setText("\n[현대자동차] 인증번호: ["+code+"]입니다 - 타인 노출 금지");
+        message.setText(makeMessage(code));
 
         try {
             messageService.send(message);
@@ -51,6 +51,10 @@ public class MessageService {
         } catch (Exception exception) {
             throw new MessageSendFailException("기타 이유로 메시지 전송에 실패했습니다.");
         }
+    }
+
+    private String makeMessage(String code) {
+        return "\n[현대자동차] 인증번호: ["+code+"]입니다 - 타인 노출 금지";
     }
 
 }
