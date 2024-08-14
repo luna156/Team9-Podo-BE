@@ -1,6 +1,5 @@
 package com.softeer.podo.event.model.entity;
 
-import com.softeer.podo.admin.model.entity.LotsUser;
 import com.softeer.podo.common.entity.DateEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

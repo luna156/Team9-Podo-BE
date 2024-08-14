@@ -1,12 +1,12 @@
-package com.softeer.podo.admin.mapper;
+package com.softeer.podo.admin.model.mapper;
 
 
-import com.softeer.podo.admin.model.dto.user.ArrivalUserDto;
-import com.softeer.podo.admin.model.dto.user.ArrivalUserListDto;
-import com.softeer.podo.admin.model.dto.user.LotsUserDto;
-import com.softeer.podo.admin.model.dto.user.LotsUserListDto;
-import com.softeer.podo.admin.model.entity.ArrivalUser;
-import com.softeer.podo.admin.model.entity.LotsUser;
+import com.softeer.podo.admin.model.dto.ArrivalUserDto;
+import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
+import com.softeer.podo.admin.model.dto.LotsUserDto;
+import com.softeer.podo.admin.model.dto.LotsUserListDto;
+import com.softeer.podo.event.model.entity.ArrivalUser;
+import com.softeer.podo.event.model.entity.LotsUser;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;

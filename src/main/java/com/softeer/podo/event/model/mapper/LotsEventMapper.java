@@ -1,4 +1,4 @@
-package com.softeer.podo.event.model.dto.mapper;
+package com.softeer.podo.event.model.mapper;
 
 import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
 import com.softeer.podo.event.model.dto.ScenarioDto;

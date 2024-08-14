@@ -1,12 +1,12 @@
-package com.softeer.podo.admin.mapper;
+package com.softeer.podo.admin.model.mapper;
 
 import com.softeer.podo.admin.model.dto.EventDto;
 import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.dto.EventRewardDto;
 import com.softeer.podo.admin.model.dto.EventWeightDto;
-import com.softeer.podo.admin.model.entity.Event;
-import com.softeer.podo.admin.model.entity.EventReward;
-import com.softeer.podo.admin.model.entity.EventWeight;
+import com.softeer.podo.event.model.entity.Event;
+import com.softeer.podo.event.model.entity.EventReward;
+import com.softeer.podo.event.model.entity.EventWeight;
 
 import java.util.ArrayList;
 import java.util.List;

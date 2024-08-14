@@ -1,4 +1,4 @@
-package com.softeer.podo.admin.model.entity;
+package com.softeer.podo.event.model.entity;
 
 import com.softeer.podo.common.entity.DateEntity;
 import jakarta.persistence.*;
@@ -19,7 +19,6 @@ public class EventWeight extends DateEntity {
      * 가중치 배수
      */
     private int times;
-    @Column(name = "weight_condition")
     private String weightCondition;
 
     @OneToOne(fetch = FetchType.LAZY)

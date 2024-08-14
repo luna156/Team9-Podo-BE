@@ -1,16 +1,9 @@
 package com.softeer.podo.common;
 
-import com.softeer.podo.admin.model.entity.Role;
+import com.softeer.podo.event.model.entity.Role;
 import com.softeer.podo.security.jwt.TokenInfo;
 import com.softeer.podo.security.jwt.TokenProvider;
-import com.softeer.podo.verification.service.RedisService;
-import com.softeer.podo.verification.service.VerificationService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

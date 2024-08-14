@@ -1,6 +1,6 @@
 package com.softeer.podo.verification;
 
-import com.softeer.podo.admin.model.entity.Role;
+import com.softeer.podo.event.model.entity.Role;
 import com.softeer.podo.common.VerificationFacadeBase;
 import com.softeer.podo.common.utils.NumberUtils;
 import com.softeer.podo.security.jwt.TokenInfo;

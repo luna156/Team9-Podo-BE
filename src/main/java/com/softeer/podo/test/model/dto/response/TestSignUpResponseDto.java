@@ -1,6 +1,6 @@
 package com.softeer.podo.test.model.dto.response;
 
-import com.softeer.podo.admin.model.entity.Role;
+import com.softeer.podo.event.model.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.softeer.podo.admin.model.entity.validation;
+package com.softeer.podo.admin.validation;
 
 import jakarta.validation.GroupSequence;
 import jakarta.validation.groups.Default;

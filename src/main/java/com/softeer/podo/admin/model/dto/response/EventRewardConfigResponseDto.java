@@ -2,7 +2,7 @@ package com.softeer.podo.admin.model.dto.response;
 
 import com.softeer.podo.admin.model.dto.EventRewardDto;
 import com.softeer.podo.admin.model.dto.EventWeightDto;
-import com.softeer.podo.admin.model.dto.user.UserListDto;
+import com.softeer.podo.admin.model.dto.UserListDto;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;

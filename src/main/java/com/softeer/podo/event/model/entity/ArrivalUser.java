@@ -1,4 +1,4 @@
-package com.softeer.podo.admin.model.entity;
+package com.softeer.podo.event.model.entity;
 
 import com.softeer.podo.common.entity.DateEntity;
 import jakarta.persistence.*;
@@ -24,7 +24,6 @@ public class ArrivalUser extends DateEntity {
 
 	@Column(name = "phone_number", unique = true)
 	private String phoneNum;
-	@Column(name = "arrival_rank")
 	private int arrivalRank;
 	@Enumerated(EnumType.STRING)
 	private Role role;

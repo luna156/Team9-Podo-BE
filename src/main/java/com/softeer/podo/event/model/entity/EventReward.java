@@ -1,4 +1,4 @@
-package com.softeer.podo.admin.model.entity;
+package com.softeer.podo.event.model.entity;
 
 import com.softeer.podo.common.entity.DateEntity;
 import jakarta.persistence.*;
@@ -16,7 +16,6 @@ public class EventReward extends DateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reward_id")
     private Long id;
-    @Column(name = "reward_rank")
     private int rewardRank;
     /**
      * 당첨자수

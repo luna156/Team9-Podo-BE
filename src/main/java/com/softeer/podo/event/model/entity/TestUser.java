@@ -1,5 +1,4 @@
-package com.softeer.podo.admin.model.entity;
-
+package com.softeer.podo.event.model.entity;
 
 import com.softeer.podo.common.entity.DateEntity;
 import jakarta.persistence.*;
@@ -9,16 +8,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "event_types")
+@Table(name = "testusers")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventType extends DateEntity {
+public class TestUser extends DateEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "type_id")
-    private Long id;
-    @Column(name = "type")
-    private String type;
+    @Column(name ="testuser_id")
+    private Long id; //고유 pk
+
+    private String name;
+    private String phoneNum;
+    private Role role;
 }

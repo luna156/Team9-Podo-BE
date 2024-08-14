@@ -1,8 +1,6 @@
-package com.softeer.podo.admin.model.entity;
+package com.softeer.podo.event.model.entity;
 
 import com.softeer.podo.common.entity.DateEntity;
-import com.softeer.podo.event.model.entity.LotsComment;
-import com.softeer.podo.event.model.entity.TestResult;
 import jakarta.persistence.*;
 import lombok.*;
 

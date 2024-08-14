@@ -2,7 +2,7 @@ package com.softeer.podo.admin.model.dto.request;
 
 import com.softeer.podo.admin.model.dto.EventRewardDto;
 import com.softeer.podo.admin.model.dto.EventWeightDto;
-import com.softeer.podo.admin.model.entity.validation.ValidationGroups;
+import com.softeer.podo.admin.validation.ValidationGroups;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

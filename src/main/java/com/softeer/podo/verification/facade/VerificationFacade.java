@@ -2,7 +2,7 @@ package com.softeer.podo.verification.facade;
 
 import com.softeer.podo.security.jwt.TokenInfo;
 import com.softeer.podo.security.jwt.TokenProvider;
-import com.softeer.podo.admin.model.entity.Role;
+import com.softeer.podo.event.model.entity.Role;
 import com.softeer.podo.verification.exception.TokenNotMatchException;
 import com.softeer.podo.verification.model.dto.request.CheckVerificationRequestDto;
 import com.softeer.podo.verification.model.dto.response.CheckVerificationResponseDto;

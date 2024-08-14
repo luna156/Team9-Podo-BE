@@ -1,4 +1,4 @@
-package com.softeer.podo.admin.model.exception;
+package com.softeer.podo.admin.exception;
 
 import com.softeer.podo.common.response.CommonResponse;
 import com.softeer.podo.common.response.ErrorCode;

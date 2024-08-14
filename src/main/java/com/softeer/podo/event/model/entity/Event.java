@@ -1,4 +1,4 @@
-package com.softeer.podo.admin.model.entity;
+package com.softeer.podo.event.model.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -32,10 +32,8 @@ public class Event extends DateEntity {
     /**
      * 형식은 7자리 0과 1로 이루어진 문자열. 월화수목금토일 의미
      */
-    @Column(name = "repeat_day")
     private String repeatDay;
     @JsonFormat(pattern = "HH:mm:ss")
-    @Column(name = "repeat_time")
     private LocalTime repeatTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -45,7 +43,6 @@ public class Event extends DateEntity {
     @Column(name = "end_time")
     private LocalDateTime endAt;
 
-    @Column(name = "tag_image")
     private String tagImage;
 
     @OneToMany(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL)

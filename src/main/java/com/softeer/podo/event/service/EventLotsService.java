@@ -1,11 +1,11 @@
 package com.softeer.podo.event.service;
 
 
-import com.softeer.podo.admin.model.entity.Role;
+import com.softeer.podo.event.model.entity.Role;
 import com.softeer.podo.common.utils.AESUtils;
 import com.softeer.podo.common.utils.URLUtils;
 import com.softeer.podo.event.exception.*;
-import com.softeer.podo.event.model.dto.mapper.LotsEventMapper;
+import com.softeer.podo.event.model.mapper.LotsEventMapper;
 import com.softeer.podo.event.model.dto.request.LotsApplicationRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsCommentRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsTypeRequestDto;
@@ -21,8 +21,8 @@ import com.softeer.podo.event.repository.TestResultRepository;
 import com.softeer.podo.event.util.Result;
 import com.softeer.podo.event.util.SelectionMap;
 import com.softeer.podo.security.AuthInfo;
-import com.softeer.podo.admin.model.entity.LotsUser;
-import com.softeer.podo.admin.repository.LotsUserRepository;
+import com.softeer.podo.event.model.entity.LotsUser;
+import com.softeer.podo.event.repository.LotsUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

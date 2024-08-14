@@ -1,8 +1,8 @@
 package com.softeer.podo.event.service;
 
-import com.softeer.podo.admin.model.entity.LotsUser;
-import com.softeer.podo.admin.model.entity.Role;
-import com.softeer.podo.admin.repository.LotsUserRepository;
+import com.softeer.podo.event.model.entity.LotsUser;
+import com.softeer.podo.event.model.entity.Role;
+import com.softeer.podo.event.repository.LotsUserRepository;
 import com.softeer.podo.event.exception.ExistingUserException;
 import com.softeer.podo.event.model.dto.request.LotsApplicationRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsCommentRequestDto;
