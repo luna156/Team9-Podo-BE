@@ -7,9 +7,11 @@ import com.softeer.podo.common.utils.URLUtils;
 import com.softeer.podo.event.exception.*;
 import com.softeer.podo.event.model.dto.*;
 import com.softeer.podo.event.model.dto.mapper.LotsEventMapper;
+import com.softeer.podo.event.model.entity.KeyWord;
 import com.softeer.podo.event.model.entity.LotsComment;
 import com.softeer.podo.event.model.entity.LotsShareLink;
 import com.softeer.podo.event.model.entity.TestResult;
+import com.softeer.podo.event.repository.KeyWordRepository;
 import com.softeer.podo.event.repository.LotsCommentRepository;
 import com.softeer.podo.event.repository.LotsShareLinkRepository;
 import com.softeer.podo.event.repository.TestResultRepository;
@@ -23,6 +25,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class EventLotsService {
@@ -31,6 +35,7 @@ public class EventLotsService {
     private final TestResultRepository testResultRepository;
     private final LotsCommentRepository lotsCommentRepository;
     private final LotsShareLinkRepository lotsShareLinkRepository;
+    private final KeyWordRepository keyWordRepository;
 
     private final SelectionMap selectionMap;
     private final LotsEventMapper lotsEventMapper;
@@ -152,6 +157,11 @@ public class EventLotsService {
         return findUser.getTestResult().getUrl();
     }
 
+    @Transactional
+    public WordCloudResponseDto getWordCloud() {
+        List<KeyWord> keyWordList = keyWordRepository.findAll();
+        return lotsEventMapper.KeyWordListToWordCloudResponseDto(keyWordList);
+    }
 
     private String createUniqueLink(Long userId) throws Exception {
         return SERVER_HOST + ":" + SERVER_PORT + "/lots/link/" + URLUtils.encode(AESUtils.encrypt(String.valueOf(userId)));
