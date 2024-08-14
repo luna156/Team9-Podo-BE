@@ -14,6 +14,7 @@ import com.softeer.podo.event.model.dto.response.LotsCommentResponseDto;
 import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
 import com.softeer.podo.event.model.dto.*;
 import com.softeer.podo.event.model.entity.KeyWord;
+import com.softeer.podo.event.model.entity.KeyWord;
 import com.softeer.podo.event.model.entity.LotsComment;
 import com.softeer.podo.event.model.entity.LotsShareLink;
 import com.softeer.podo.event.model.entity.TestResult;

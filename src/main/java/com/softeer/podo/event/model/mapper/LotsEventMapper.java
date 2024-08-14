@@ -1,15 +1,14 @@
 package com.softeer.podo.event.model.mapper;
 
-import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
 import com.softeer.podo.event.model.dto.KeyWordDto;
 import com.softeer.podo.event.model.dto.ScenarioDto;
 import com.softeer.podo.event.model.dto.WordCloudResponseDto;
+import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
 import com.softeer.podo.event.model.entity.KeyWord;
 import com.softeer.podo.event.model.entity.TestResult;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 

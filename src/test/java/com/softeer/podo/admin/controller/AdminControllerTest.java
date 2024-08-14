@@ -1,13 +1,13 @@
 package com.softeer.podo.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softeer.podo.admin.model.dto.*;
-import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
-import com.softeer.podo.admin.service.AdminService;
+import com.softeer.podo.admin.model.dto.EventRewardDto;
+import com.softeer.podo.admin.model.dto.EventWeightDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
+import com.softeer.podo.admin.service.AdminService;
 import jakarta.transaction.Transactional;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,16 +19,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
