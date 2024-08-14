@@ -38,7 +38,7 @@ public class VerificationService {
      * @return 인증번호 일치 여부
      */
     @Transactional
-    public boolean getAuthInfo(
+    public boolean isVerificationCodeValid(
             String name,
             String phoneNum,
             String verificationCode
