@@ -26,7 +26,7 @@ public class CommentCheckScheduler {
 	/**
 	 * 특정 시간에 comment하루동안 등록된 comment들에 대해서 키워드 빈도수 체크 실행
 	 */
-	@Scheduled(cron = "0 25 03 * * *")
+	@Scheduled(cron = "0 0 03 * * *")
 	public void setEventArrivalCount() {
 		// 어제 일자의 comment들 수집
 		LocalDateTime startOfDay = LocalDate.now().minusDays(1).atStartOfDay();
