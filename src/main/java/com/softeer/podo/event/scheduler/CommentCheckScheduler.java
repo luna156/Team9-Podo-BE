@@ -32,7 +32,7 @@ public class CommentCheckScheduler {
 		LocalDateTime startOfDay = LocalDate.now().minusDays(1).atStartOfDay();
 		LocalDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
 
-		List<LotsComment> comments = lotsCommentRepository.findByCreatedAtBetween(startOfDay, endOfDay).orElse(new ArrayList<>());
+		List<LotsComment> comments = lotsCommentRepository.findByCreatedAtBetween(startOfDay, endOfDay);
 		if(comments.isEmpty()) return;
 
 		List<KeyWord> keyWords = keywordRepository.findAll();

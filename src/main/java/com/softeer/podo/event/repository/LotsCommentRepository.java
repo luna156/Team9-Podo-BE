@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface LotsCommentRepository extends JpaRepository<LotsComment, Long> {
     boolean existsByLotsUser(LotsUser lotsUser);
 
-    Optional<List<LotsComment>> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<LotsComment> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
 }
