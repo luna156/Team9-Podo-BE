@@ -32,7 +32,7 @@ public class VerificationFacade {
 
     @Transactional
     public CheckVerificationResponseDto checkVerification(CheckVerificationRequestDto dto) {
-        if(verificationService.getAuthInfo(dto.getName(), dto.getPhoneNum(), dto.getVerificationCode())) {
+        if(verificationService.isVerificationCodeValid(dto.getName(), dto.getPhoneNum(), dto.getVerificationCode())) {
             TokenInfo token = tokenProvider.createAccessToken(dto.getName(), dto.getPhoneNum(), Role.ROLE_USER);
 
             return new CheckVerificationResponseDto(
