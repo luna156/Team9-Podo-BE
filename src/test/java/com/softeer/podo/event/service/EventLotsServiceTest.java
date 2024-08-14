@@ -1,8 +1,5 @@
 package com.softeer.podo.event.service;
 
-import com.softeer.podo.event.model.entity.LotsUser;
-import com.softeer.podo.event.model.entity.Role;
-import com.softeer.podo.event.repository.LotsUserRepository;
 import com.softeer.podo.event.exception.ExistingUserException;
 import com.softeer.podo.event.model.dto.request.LotsApplicationRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsCommentRequestDto;
@@ -11,9 +8,13 @@ import com.softeer.podo.event.model.dto.response.LotsApplicationResponseDto;
 import com.softeer.podo.event.model.dto.response.LotsCommentResponseDto;
 import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
 import com.softeer.podo.event.model.entity.LotsShareLink;
+import com.softeer.podo.event.model.entity.LotsUser;
+import com.softeer.podo.event.model.entity.Role;
 import com.softeer.podo.event.model.entity.TestResult;
 import com.softeer.podo.event.repository.LotsCommentRepository;
 import com.softeer.podo.event.repository.LotsShareLinkRepository;
+import com.softeer.podo.event.repository.LotsUserRepository;
+import com.softeer.podo.event.repository.TestResultRepository;
 import com.softeer.podo.security.AuthInfo;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
@@ -43,6 +44,9 @@ class EventLotsServiceTest {
 	LotsCommentRepository lotsCommentRepository;
 
 	@MockBean
+	TestResultRepository testResultRepository;
+
+	@MockBean
 	LotsShareLinkRepository lotsShareLinkRepository;
 
 	private static String name;
@@ -52,6 +56,7 @@ class EventLotsServiceTest {
 	private static String url;
 	private static LotsUser lotsUser;
 	private static LotsShareLink lotsShareLink;
+	private static TestResult testResult;
 
 	@BeforeAll
 	static void setUp() {
@@ -70,6 +75,12 @@ class EventLotsServiceTest {
 						            .build())
 				.build();
 		lotsShareLink = new LotsShareLink(1L, lotsUser, 0L, "testlink");
+		testResult = TestResult
+				.builder()
+				.id(resultId)
+				.description("test_description")
+				.url("result url")
+				.build();
 	}
 
 	@Test
@@ -77,6 +88,8 @@ class EventLotsServiceTest {
 	@DisplayName("유형테스트 결과 제출 테스트")
 	void getProperDriverType() {
 		//given
+		Mockito.when(testResultRepository.findById(any())).thenReturn(Optional.ofNullable(testResult));
+		Mockito.when(testResultRepository.findByResult(any())).thenReturn(testResult);
 		LotsTypeRequestDto requestDto = new LotsTypeRequestDto();
 		requestDto.setAnswer1("A");
 		requestDto.setAnswer2("B");
@@ -99,6 +112,7 @@ class EventLotsServiceTest {
 		Mockito.when(lotsUserRepository.existsByPhoneNum(phoneNum)).thenReturn(false);
 		Mockito.when(lotsUserRepository.save(any())).thenReturn(lotsUser);
 		AuthInfo authInfo = new AuthInfo(name, phoneNum, Role.ROLE_USER);
+		Mockito.when(testResultRepository.findById(resultId)).thenReturn(Optional.ofNullable(testResult));
 		LotsApplicationRequestDto requestDto = new LotsApplicationRequestDto(resultId);
 
 		//when
@@ -147,6 +161,7 @@ class EventLotsServiceTest {
 		Mockito.when(lotsUserRepository.save(any())).thenReturn(lotsUser);
 		Mockito.when(lotsUserRepository.findById(1L)).thenReturn(Optional.ofNullable(lotsUser));
 		Mockito.when(lotsShareLinkRepository.findByLotsUser(lotsUser)).thenReturn(Optional.of(lotsShareLink));
+		Mockito.when(testResultRepository.findById(resultId)).thenReturn(Optional.ofNullable(testResult));
 		AuthInfo authInfo = new AuthInfo(name, phoneNum, Role.ROLE_USER);
 		LotsApplicationRequestDto requestDto = new LotsApplicationRequestDto(resultId);
 		String link = URLDecoder.decode(eventLotsService.applyEvent(authInfo, requestDto).getUniqueLink(), StandardCharsets.UTF_8);
