@@ -1,7 +1,7 @@
 package com.softeer.podo.security;
 
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.softeer.podo.admin.model.entity.Role;
+import com.softeer.podo.event.model.entity.Role;
 import com.softeer.podo.common.TokenProviderBase;
 import com.softeer.podo.security.jwt.TokenInfo;
 import org.junit.jupiter.api.DisplayName;

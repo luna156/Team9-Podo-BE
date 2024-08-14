@@ -1,13 +1,19 @@
 package com.softeer.podo.admin.service;
 
 import com.softeer.podo.admin.model.dto.*;
-import com.softeer.podo.admin.model.dto.user.ArrivalUserDto;
-import com.softeer.podo.admin.model.dto.user.ArrivalUserListDto;
-import com.softeer.podo.admin.model.dto.user.LotsUserDto;
-import com.softeer.podo.admin.model.dto.user.LotsUserListDto;
-import com.softeer.podo.admin.model.entity.*;
-import com.softeer.podo.admin.repository.*;
-import com.softeer.podo.event.model.entity.LotsComment;
+import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
+import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
+import com.softeer.podo.admin.model.dto.response.ConfigEventRewardResponseDto;
+import com.softeer.podo.admin.model.dto.ArrivalUserDto;
+import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
+import com.softeer.podo.admin.model.dto.LotsUserDto;
+import com.softeer.podo.admin.model.dto.LotsUserListDto;
+import com.softeer.podo.event.model.entity.*;
+import com.softeer.podo.event.repository.ArrivalUserRepository;
+import com.softeer.podo.event.repository.EventRepository;
+import com.softeer.podo.event.repository.EventRewardRepository;
+import com.softeer.podo.event.repository.LotsUserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -177,7 +183,7 @@ class AdminServiceTest {
 		LocalDateTime startAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		LocalDateTime endAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		String tagImage = "image url";
-		EventConfigRequestDto requestDto = new EventConfigRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
+		ConfigEventRequestDto requestDto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
 
 		//when
 		EventDto responseDto = adminService.configArrivalEvent(requestDto);
@@ -205,7 +211,7 @@ class AdminServiceTest {
 		LocalDateTime startAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		LocalDateTime endAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		String tagImage = "image url";
-		EventConfigRequestDto requestDto = new EventConfigRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
+		ConfigEventRequestDto requestDto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
 
 		//when
 		EventDto responseDto = adminService.configLotsEvent(requestDto);
@@ -250,11 +256,11 @@ class AdminServiceTest {
 			EventRewardDto rewardDto = new EventRewardDto(i, i, "reward" + i);
 			eventRewardList.add(rewardDto);
 		}
-		EventRewardConfigRequestDto requestDto = new EventRewardConfigRequestDto();
+		ConfigEventRewardRequestDto requestDto = new ConfigEventRewardRequestDto();
 		requestDto.setEventRewardList(eventRewardList);
 
 		//when
-		EventRewardConfigResponseDto responseDto = adminService.configArrivalEventReward(requestDto);
+		ConfigEventRewardResponseDto responseDto = adminService.configArrivalEventReward(requestDto);
 
 		//then
 		assertEquals(eventRewardList, responseDto.getEventRewards());
@@ -304,7 +310,7 @@ class AdminServiceTest {
 			EventRewardDto rewardDto = new EventRewardDto(i, i, "reward" + i);
 			eventRewardList.add(rewardDto);
 		}
-		EventRewardConfigRequestDto requestDto = new EventRewardConfigRequestDto();
+		ConfigEventRewardRequestDto requestDto = new ConfigEventRewardRequestDto();
 		requestDto.setEventRewardList(eventRewardList);
 
 		EventWeightDto eventWeight = new EventWeightDto(3, "comment");
@@ -312,7 +318,7 @@ class AdminServiceTest {
 
 
 		//when
-		EventRewardConfigResponseDto responseDto = adminService.configLotsEventReward(requestDto);
+		ConfigEventRewardResponseDto responseDto = adminService.configLotsEventReward(requestDto);
 
 		//then
 		assertEquals(eventRewardList, responseDto.getEventRewards());

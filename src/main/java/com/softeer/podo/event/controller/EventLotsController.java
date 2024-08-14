@@ -1,10 +1,10 @@
 package com.softeer.podo.event.controller;
 
 import com.softeer.podo.common.response.CommonResponse;
-import com.softeer.podo.event.model.dto.LotsApplicationRequestDto;
-import com.softeer.podo.event.model.dto.LotsApplicationResponseDto;
-import com.softeer.podo.event.model.dto.LotsCommentRequestDto;
-import com.softeer.podo.event.model.dto.LotsCommentResponseDto;
+import com.softeer.podo.event.model.dto.request.LotsApplicationRequestDto;
+import com.softeer.podo.event.model.dto.response.LotsApplicationResponseDto;
+import com.softeer.podo.event.model.dto.request.LotsCommentRequestDto;
+import com.softeer.podo.event.model.dto.response.LotsCommentResponseDto;
 import com.softeer.podo.event.service.EventLotsService;
 import com.softeer.podo.security.Auth;
 import com.softeer.podo.security.AuthInfo;

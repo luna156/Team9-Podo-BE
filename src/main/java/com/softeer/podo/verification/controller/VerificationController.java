@@ -2,9 +2,9 @@ package com.softeer.podo.verification.controller;
 
 import com.softeer.podo.common.response.CommonResponse;
 import com.softeer.podo.verification.facade.VerificationFacade;
-import com.softeer.podo.verification.model.dto.CheckVerificationRequestDto;
-import com.softeer.podo.verification.model.dto.CheckVerificationResponseDto;
-import com.softeer.podo.verification.model.dto.ClaimVerificationRequestDto;
+import com.softeer.podo.verification.model.dto.request.CheckVerificationRequestDto;
+import com.softeer.podo.verification.model.dto.response.CheckVerificationResponseDto;
+import com.softeer.podo.verification.model.dto.request.ClaimVerificationRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -1,13 +1,14 @@
 package com.softeer.podo.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softeer.podo.admin.model.dto.*;
+import com.softeer.podo.admin.model.dto.EventRewardDto;
+import com.softeer.podo.admin.model.dto.EventWeightDto;
+import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
+import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.service.AdminService;
 import jakarta.transaction.Transactional;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -73,7 +74,7 @@ class AdminControllerTest {
 		LocalDateTime startAt = LocalDateTime.of(2024, 9, 6, 13, 0);
 		LocalDateTime endAt = LocalDateTime.of(2024, 9, 6, 13, 0);
 		String tagImage = "image url";
-		EventConfigRequestDto dto = new EventConfigRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
+		ConfigEventRequestDto dto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
 		String json = mapper.writeValueAsString(dto);
 
 		//when
@@ -102,7 +103,7 @@ class AdminControllerTest {
 		LocalDateTime startAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		LocalDateTime endAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		String tagImage = "image url";
-		EventConfigRequestDto dto = new EventConfigRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
+		ConfigEventRequestDto dto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
 		String json = mapper.writeValueAsString(dto);
 
 		//when
@@ -131,7 +132,7 @@ class AdminControllerTest {
 			EventRewardDto rewardDto = new EventRewardDto(i, i, "reward" + i);
 			eventRewardList.add(rewardDto);
 		}
-		EventRewardConfigRequestDto dto = new EventRewardConfigRequestDto();
+		ConfigEventRewardRequestDto dto = new ConfigEventRewardRequestDto();
 		dto.setEventRewardList(eventRewardList);
 		String json = mapper.writeValueAsString(dto);
 
@@ -161,7 +162,7 @@ class AdminControllerTest {
 			EventRewardDto rewardDto = new EventRewardDto(i, i, "reward" + i);
 			eventRewardList.add(rewardDto);
 		}
-		EventRewardConfigRequestDto dto = new EventRewardConfigRequestDto();
+		ConfigEventRewardRequestDto dto = new ConfigEventRewardRequestDto();
 		dto.setEventRewardList(eventRewardList);
 		dto.setEventWeight(new EventWeightDto(3, "comment"));
 		String json = mapper.writeValueAsString(dto);
