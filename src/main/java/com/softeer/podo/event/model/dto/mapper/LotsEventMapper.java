@@ -1,11 +1,17 @@
 package com.softeer.podo.event.model.dto.mapper;
 
+import com.softeer.podo.event.model.dto.KeyWordDto;
 import com.softeer.podo.event.model.dto.LotsTypeResponseDto;
 import com.softeer.podo.event.model.dto.ScenarioDto;
+import com.softeer.podo.event.model.dto.WordCloudResponseDto;
+import com.softeer.podo.event.model.entity.KeyWord;
 import com.softeer.podo.event.model.entity.TestResult;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Component
 public class LotsEventMapper {
@@ -23,5 +29,15 @@ public class LotsEventMapper {
 		scenarioArrayList.add( new ScenarioDto(testResult.getScenario3(), testResult.getSubtitle3(), testResult.getImage3()));
 		dto.setScenarioList(scenarioArrayList);
 		return dto;
+	}
+
+	public WordCloudResponseDto KeyWordListToWordCloudResponseDto (List<KeyWord> keyWordList) {
+		List<KeyWordDto> keyWordDtoList = new ArrayList<>();
+		for (KeyWord keyWord : keyWordList) {
+			KeyWordDto keyWordDto = new KeyWordDto(keyWord.getKeyword(), keyWord.getCount());
+			keyWordDtoList.add(keyWordDto);
+		}
+		keyWordDtoList.sort(Comparator.comparingInt(KeyWordDto::getCount).reversed());
+		return new WordCloudResponseDto(keyWordDtoList);
 	}
 }
