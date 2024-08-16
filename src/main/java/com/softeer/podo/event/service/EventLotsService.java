@@ -3,7 +3,7 @@ package com.softeer.podo.event.service;
 
 import com.softeer.podo.event.model.entity.Role;
 import com.softeer.podo.common.utils.AESUtils;
-import com.softeer.podo.common.utils.URLUtils;
+import com.softeer.podo.common.utils.UrlUtils;
 import com.softeer.podo.event.exception.*;
 import com.softeer.podo.event.model.mapper.LotsEventMapper;
 import com.softeer.podo.event.model.dto.request.LotsApplicationRequestDto;
@@ -13,7 +13,6 @@ import com.softeer.podo.event.model.dto.response.LotsApplicationResponseDto;
 import com.softeer.podo.event.model.dto.response.LotsCommentResponseDto;
 import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
 import com.softeer.podo.event.model.dto.*;
-import com.softeer.podo.event.model.entity.KeyWord;
 import com.softeer.podo.event.model.entity.KeyWord;
 import com.softeer.podo.event.model.entity.LotsComment;
 import com.softeer.podo.event.model.entity.LotsShareLink;
@@ -46,6 +45,7 @@ public class EventLotsService {
 
     private final SelectionMap selectionMap;
     private final LotsEventMapper lotsEventMapper;
+    private final AESUtils aesUtils;
 
     @Value("${server.host}")
     private String SERVER_HOST;
@@ -151,7 +151,7 @@ public class EventLotsService {
     @Transactional
     public String getEventUrl(String uniqueLink) throws Exception {
 //        String decodedUniqueLink = URLUtils.decode(uniqueLink);
-        Long userId = Long.parseLong(AESUtils.decrypt(uniqueLink));
+        Long userId = Long.parseLong(aesUtils.decrypt(uniqueLink));
         LotsUser findUser = lotsUserRepository.findById(userId)
                 .orElseThrow(() -> new UserNotExistException("유저가 존재하지 않습니다."));
 
@@ -170,7 +170,8 @@ public class EventLotsService {
         return lotsEventMapper.KeyWordListToWordCloudResponseDto(keyWordList);
     }
 
+    //TODO("프론트 공유페이지 링크 나오면 수정")
     private String createUniqueLink(Long userId) throws Exception {
-        return SERVER_HOST + ":" + SERVER_PORT + "/lots/link/" + URLUtils.encode(AESUtils.encrypt(String.valueOf(userId)));
+        return SERVER_HOST + ":" + SERVER_PORT + "/lots/link/" + UrlUtils.encode(aesUtils.encrypt(String.valueOf(userId)));
     }
 }
