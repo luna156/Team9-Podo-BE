@@ -13,7 +13,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 /**
  * InputStream으로 Body를 읽으려면 한번만 읽을 수 있기 때문에 컨트롤러에서 사용하기 위해서는 받아서 캐싱해주어야 한다
@@ -72,38 +71,6 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
     public String getContents() {
         return contents.toString(StandardCharsets.UTF_8);
-    }
-
-    private String readRequestBody(HttpServletRequest request) throws IOException {
-        try(InputStream inputStream = request.getInputStream()) {
-            return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-                    .lines()
-                    .collect(Collectors.joining("\n"));
-        }
-    }
-
-    public String body() throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            InputStream inputStream = request.getInputStream();
-            if (inputStream != null) {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                char[] charBuffer = new char[128];
-                int bytesRead;
-                while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-                    stringBuilder.append(charBuffer, 0, bytesRead);
-                }
-            }
-            System.out.println("stringBuilder = " + stringBuilder);
-        } catch(IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if(bufferedReader != null) {
-                bufferedReader.close();
-            }
-        }
-        return stringBuilder.toString();
     }
 
     public Map<String, String> headerMap() {
