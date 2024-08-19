@@ -1,11 +1,10 @@
 package com.softeer.podo.event.service;
 
 
-import com.softeer.podo.event.model.entity.Role;
 import com.softeer.podo.common.utils.AESUtils;
 import com.softeer.podo.common.utils.UrlUtils;
 import com.softeer.podo.event.exception.*;
-import com.softeer.podo.event.model.mapper.LotsEventMapper;
+import com.softeer.podo.event.model.dto.WordCloudResponseDto;
 import com.softeer.podo.event.model.dto.request.LotsApplicationRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsCommentRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsTypeRequestDto;
@@ -24,8 +23,6 @@ import com.softeer.podo.event.repository.TestResultRepository;
 import com.softeer.podo.event.util.Result;
 import com.softeer.podo.event.util.SelectionMap;
 import com.softeer.podo.security.AuthInfo;
-import com.softeer.podo.event.model.entity.LotsUser;
-import com.softeer.podo.event.repository.LotsUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,7 +36,6 @@ public class EventLotsService {
 
     private final LotsUserRepository lotsUserRepository;
     private final TestResultRepository testResultRepository;
-    private final LotsCommentRepository lotsCommentRepository;
     private final LotsShareLinkRepository lotsShareLinkRepository;
     private final KeyWordRepository keyWordRepository;
 
@@ -122,8 +118,6 @@ public class EventLotsService {
         if(!lotsUserRepository.existsByPhoneNum(authInfo.getPhoneNum())){
             throw new UserNotExistException("해당 사용자가 아직 이벤트에 응모하지 않았습니다.");
         }
-
-        // TODO("여기에 comment 내용 체크용 로직 구현")
 
         LotsUser lotsUser = lotsUserRepository.findByPhoneNum(authInfo.getPhoneNum())
                 .orElseThrow(() ->  new UserNotExistException("해당 사용자가 아직 이벤트에 응모하지 않았습니다."));
