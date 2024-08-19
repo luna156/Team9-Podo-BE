@@ -1,14 +1,11 @@
 package com.softeer.podo.common.utils;
 
-import org.springframework.stereotype.Component;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-@Component
-public class URLUtils {
+public class UrlUtils {
 
     /**
      * 주어진 문자열을 URL 인코딩합니다.
