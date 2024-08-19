@@ -12,15 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class VerificationFacadeBase {
+public class ReissueTokenBase {
 
     @InjectMocks
-    protected VerificationFacade verificationFacade;
-
-    @Mock
-    protected MessageService messageService;
-
-    @Mock
     protected VerificationService verificationService;
 
     @Mock

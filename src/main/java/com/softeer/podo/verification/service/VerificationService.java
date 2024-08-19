@@ -1,6 +1,10 @@
 package com.softeer.podo.verification.service;
 
 import com.softeer.podo.common.utils.NumberUtils;
+import com.softeer.podo.event.model.entity.Role;
+import com.softeer.podo.security.jwt.TokenInfo;
+import com.softeer.podo.security.jwt.TokenProvider;
+import com.softeer.podo.verification.model.dto.response.ReissueTokenResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import java.time.Duration;
 public class VerificationService {
 
     private final RedisService redisService;
+    private final TokenProvider tokenProvider;
     private final Duration EXPIRE_TIME = Duration.ofMinutes(3);
 
     /**
@@ -50,4 +55,18 @@ public class VerificationService {
         return value.equals(verificationCode);
     }
 
+    /**
+     * 인증된 토큰에 한해 새로운 토큰을 발급해준다.
+     * @param name 사용자 이름
+     * @param phoneNum 사용자 전화번호
+     * @return 새로운 토큰
+     */
+    @Transactional
+    public ReissueTokenResponseDto reissueToken(
+            String name,
+            String phoneNum
+    ) {
+        TokenInfo newToken = tokenProvider.createAccessToken(name, phoneNum, Role.ROLE_USER);
+        return new ReissueTokenResponseDto(newToken.getToken(), newToken.getExpireTime());
+    }
 }
