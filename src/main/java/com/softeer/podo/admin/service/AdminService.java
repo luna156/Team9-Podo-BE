@@ -82,7 +82,7 @@ public class AdminService {
 						.map(EventMapper::eventRewardToEventRewardDto)
 						.toList();
 
-		return new ConfigEventRewardResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0));
+		return new ConfigEventRewardResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0,null, null));
 	}
 
 	@Transactional
@@ -113,13 +113,18 @@ public class AdminService {
 						.toList();
 		EventWeightDto eventWeightDto = EventMapper.eventWeightToEventWeightDto(lotsEvent.getEventWeight());
 
-		return new ConfigEventRewardResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0));
+		return new ConfigEventRewardResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0, null, null));
 	}
 
 	@Transactional
-	public ArrivalUserListDto getArrivalApplicationList(int pageNo) {
+	public ArrivalUserListDto getArrivalApplicationList(int pageNo, String name, String phoneNum) {
 		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
-		Page<ArrivalUser> page = arrivalUserRepository.findAll(pageable);
+		Page<ArrivalUser> page;
+		if(name!=null){
+			page = arrivalUserRepository.findAllByName(pageable, name);
+		}else if(phoneNum!=null){
+			page = arrivalUserRepository.findAllByPhoneNum(pageable, phoneNum);
+		}else page = arrivalUserRepository.findAll(pageable);
 		ArrivalUserListDto arrivalUserListDto = UserMapper.ArrivalUserPageToArrivalUserListDto(page);
 		//선착순 이벤트 id
 		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
@@ -142,9 +147,14 @@ public class AdminService {
 	}
 
 	@Transactional
-	public LotsUserListDto getLotsApplicationList(int pageNo) {
+	public LotsUserListDto getLotsApplicationList(int pageNo, String name, String phoneNum) {
 		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
-		Page<LotsUser> page = lotsUserRepository.findAll(pageable);
+		Page<LotsUser> page;
+		if(name!=null){
+			page = lotsUserRepository.findAllByName(pageable, name);
+		}else if(phoneNum!=null){
+			page = lotsUserRepository.findAllByPhoneNum(pageable, phoneNum);
+		}else page = lotsUserRepository.findAll(pageable);
 		return UserMapper.LotsUserPageToLotsUserListDto(page);
 	}
 
@@ -203,7 +213,7 @@ public class AdminService {
 			lotsUserRepository.save(lotsUserList.get(i));
 		}
 
-		return getLotsApplicationList(0);
+		return getLotsApplicationList(0, null, null);
 	}
 
 	private Event updateEventByConfigDto(Long eventId, ConfigEventRequestDto dto) {
