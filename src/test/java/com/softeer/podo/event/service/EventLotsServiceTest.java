@@ -1,20 +1,15 @@
 package com.softeer.podo.event.service;
 
 import com.softeer.podo.event.exception.ExistingUserException;
+import com.softeer.podo.event.model.dto.WordCloudResponseDto;
 import com.softeer.podo.event.model.dto.request.LotsApplicationRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsCommentRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsTypeRequestDto;
 import com.softeer.podo.event.model.dto.response.LotsApplicationResponseDto;
 import com.softeer.podo.event.model.dto.response.LotsCommentResponseDto;
 import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
-import com.softeer.podo.event.model.entity.LotsShareLink;
-import com.softeer.podo.event.model.entity.LotsUser;
-import com.softeer.podo.event.model.entity.Role;
-import com.softeer.podo.event.model.entity.TestResult;
-import com.softeer.podo.event.repository.LotsCommentRepository;
-import com.softeer.podo.event.repository.LotsShareLinkRepository;
-import com.softeer.podo.event.repository.LotsUserRepository;
-import com.softeer.podo.event.repository.TestResultRepository;
+import com.softeer.podo.event.model.entity.*;
+import com.softeer.podo.event.repository.*;
 import com.softeer.podo.security.AuthInfo;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,6 +22,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,6 +46,9 @@ class EventLotsServiceTest {
 	@MockBean
 	LotsShareLinkRepository lotsShareLinkRepository;
 
+	@MockBean
+	KeyWordRepository keyWordRepository;
+
 	private static String name;
 	private static String phoneNum;
 	private static Long resultId;
@@ -57,6 +57,7 @@ class EventLotsServiceTest {
 	private static LotsUser lotsUser;
 	private static LotsShareLink lotsShareLink;
 	private static TestResult testResult;
+	private static List<KeyWord> keyWordList;
 
 	@BeforeAll
 	static void setUp() {
@@ -81,6 +82,11 @@ class EventLotsServiceTest {
 				.description("test_description")
 				.url("result url")
 				.build();
+		keyWordList = new ArrayList<>();
+		for (int i = 1; i <= 10; i++) {
+			KeyWord keyWord = new KeyWord((long) i, "keyword" + i, i);
+			keyWordList.add(keyWord);
+		}
 	}
 
 	@Test
@@ -173,4 +179,19 @@ class EventLotsServiceTest {
 		//then
 		assertEquals(url ,resultUrl);
 	}
+
+	@Test
+	@Transactional
+	@DisplayName("word cloud service 테스트")
+	void getWordCloud(){
+		//given
+		Mockito.when(keyWordRepository.findAll()).thenReturn(keyWordList);
+
+		//when
+		WordCloudResponseDto wordCloudResponseDto = eventLotsService.getWordCloud();
+
+		//then
+		assertNotNull(wordCloudResponseDto.getWordList());
+	}
+
 }

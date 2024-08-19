@@ -222,7 +222,7 @@ class AdminControllerTest {
 		//given
 
 		//when
-		MvcResult result = mockMvc.perform(get("/admin/lots/pickrandom"))
+		MvcResult result = mockMvc.perform(get("/admin/lots/random"))
 				.andExpect(status().isOk())
 				.andReturn();
 
