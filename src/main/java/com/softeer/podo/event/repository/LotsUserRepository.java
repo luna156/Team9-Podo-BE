@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface LotsUserRepository extends JpaRepository<LotsUser, Long> {
     Optional<LotsUser> findByPhoneNum(String phoneNum);
     boolean existsByPhoneNum(String phoneNum);
-    public Page<LotsUser> findAllByName(Pageable pageable, String name);
-    public Page<LotsUser> findAllByPhoneNum(Pageable pageable, String phoneNum);
+    Page<LotsUser> findAllByName(Pageable pageable, String name);
+    Page<LotsUser> findAllByPhoneNum(Pageable pageable, String phoneNum);
 }
