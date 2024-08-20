@@ -57,14 +57,18 @@ public class AdminController {
 
 	@GetMapping("/arrival/applicationList")
 	@Operation(summary = "선착순 응모 인원 반환 Api")
-	public CommonResponse<ArrivalUserListDto> getArrivalEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo){
-		return new CommonResponse<>(adminService.getArrivalApplicationList(pageNo));
+	public CommonResponse<ArrivalUserListDto> getArrivalEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+	                                                                  @RequestParam(required = false, value = "name") String name,
+	                                                                  @RequestParam(required = false, value = "phoneNum") String phoneNum){
+		return new CommonResponse<>(adminService.getArrivalApplicationList(pageNo, name, phoneNum));
 	}
 
 	@GetMapping("/lots/applicationList")
 	@Operation(summary = "랜덤추첨 응모 인원 반환 Api")
-	public CommonResponse<LotsUserListDto> getLotsEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo){
-		return new CommonResponse<>(adminService.getLotsApplicationList(pageNo));
+	public CommonResponse<LotsUserListDto> getLotsEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+	                                                            @RequestParam(required = false, value = "name") String name,
+	                                                            @RequestParam(required = false, value = "phoneNum") String phoneNum){
+		return new CommonResponse<>(adminService.getLotsApplicationList(pageNo, name, phoneNum));
 	}
 
 	@GetMapping("/lots/random")
