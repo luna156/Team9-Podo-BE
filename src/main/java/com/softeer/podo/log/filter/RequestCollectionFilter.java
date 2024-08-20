@@ -17,7 +17,7 @@ public class RequestCollectionFilter extends OncePerRequestFilter {
         RequestWrapper wrapRequest = RequestWrapper.of(request);
         setJsonValueAndPutMdc(HEADER_MAP_MDC, wrapRequest.headerMap());
         setJsonValueAndPutMdc(PARAMETER_MAP_MDC, wrapRequest.parameterMap());
-        setJsonValueAndPutMdc(BODY_MDC, wrapRequest.getContents());
+        putMdc(BODY_MDC, wrapRequest.getContents());
 //        setJsonValueAndPutMdc(BODY_MDC, wrapRequest.body());
         putMdc(REQUEST_URI_MDC, wrapRequest.getRequestUri());
 
