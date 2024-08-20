@@ -6,6 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ArrivalUserRepository extends JpaRepository<ArrivalUser, Long> {
-	Page<ArrivalUser> findAllByName(Pageable pageable, String name);
-	Page<ArrivalUser> findAllByPhoneNum(Pageable pageable, String phoneNum);
+	Page<ArrivalUser> findAllByNameLike(Pageable pageable, String name);
+	Page<ArrivalUser> findAllByPhoneNumLike(Pageable pageable, String phoneNum);
 }

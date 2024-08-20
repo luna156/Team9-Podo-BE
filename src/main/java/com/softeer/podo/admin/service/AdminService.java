@@ -121,9 +121,9 @@ public class AdminService {
 		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
 		Page<ArrivalUser> page;
 		if(name!=null){
-			page = arrivalUserRepository.findAllByName(pageable, name);
+			page = arrivalUserRepository.findAllByNameLike(pageable, "%" + name + "%");
 		}else if(phoneNum!=null){
-			page = arrivalUserRepository.findAllByPhoneNum(pageable, phoneNum);
+			page = arrivalUserRepository.findAllByPhoneNumLike(pageable, "%" + phoneNum + "%");
 		}else page = arrivalUserRepository.findAll(pageable);
 		ArrivalUserListDto arrivalUserListDto = UserMapper.ArrivalUserPageToArrivalUserListDto(page);
 		//선착순 이벤트 id
@@ -151,9 +151,9 @@ public class AdminService {
 		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
 		Page<LotsUser> page;
 		if(name!=null){
-			page = lotsUserRepository.findAllByName(pageable, name);
+			page = lotsUserRepository.findAllByNameLike(pageable, "%" + name + "%");
 		}else if(phoneNum!=null){
-			page = lotsUserRepository.findAllByPhoneNum(pageable, phoneNum);
+			page = lotsUserRepository.findAllByPhoneNumLike(pageable, "%" + phoneNum + "%");
 		}else page = lotsUserRepository.findAll(pageable);
 		return UserMapper.LotsUserPageToLotsUserListDto(page);
 	}
