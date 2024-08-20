@@ -93,11 +93,11 @@ public class AdminLogAspect {
             return "";
         }
 
-        parameterMap.replaceAll("[\"\\}\\{]", "").split(",");
+        parameterMap.replaceAll("[\"}{]", "").split(",");
 
-        for (String entry: parameterMap.split(",")) {
+        for(String entry: parameterMap.split(",")) {
             int idx = entry.indexOf(":");
-            queryString.append(entry.substring(0, idx))
+            queryString.append(entry, 0, idx)
                     .append("=")
                     .append(entry.substring(idx + 1))
                     .append("&");

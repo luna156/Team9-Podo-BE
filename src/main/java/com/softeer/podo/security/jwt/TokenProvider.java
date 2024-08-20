@@ -25,8 +25,8 @@ import java.util.Date;
 @Component
 public class TokenProvider {
 
-    private final long ACCESS_TOKEN_VALID_TIME = (1000*60*60); //hour
-    private final long REFRESH_TOKEN_VALID_TIME = (1000*60*60*24*7); //week
+    private final long ACCESS_TOKEN_VALID_TIME = (1000*60*60); //an hour
+    private final long REFRESH_TOKEN_VALID_TIME = (1000*60*60*24*7); //a week
     private final String BEARER_TYPE = "Bearer ";
 
     @Value("${secret.jwt}")
@@ -113,6 +113,12 @@ public class TokenProvider {
         }
     }
 
+    /**
+     * Claim에서 사용자 정보를 추출해서 HttpServletRequest Attribute로 넘김
+     * 컨트롤러에서 @Auth 사용시 ArgumentResolver를 통해서 파라미터에 인증정보를 설정
+     * @param request attribute를 설정할 요청
+     * @param claimsSet Jwt claim정보를 담은 set
+     */
     public void setAttributesFromClaim(HttpServletRequest request, JWTClaimsSet claimsSet) {
         request.setAttribute("name", claimsSet.getClaim("name"));
         request.setAttribute("number", claimsSet.getClaim("number"));
@@ -120,18 +126,13 @@ public class TokenProvider {
     }
 
     /**
-     * Bearer String 제외
+     * Bearer 토큰에서 순수 토큰 추출
      */
     public String resolveToken(String token) {
         if(token.startsWith("Bearer ")) {
             return token.replace("Bearer ", "");
         }
         return null;
-    }
-
-    public Claims parseClaims(String token) {
-        SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(baseSecretKey));
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
     }
 
     private byte[] getSecretKey() {

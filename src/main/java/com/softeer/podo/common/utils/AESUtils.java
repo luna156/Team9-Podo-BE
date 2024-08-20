@@ -11,6 +11,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 
+/**
+ * AES 암호화를 위한 유틸리티 클래스
+ * @Value로 secret key 정보를 받아야 하고, 이는 내부 상태에 의존적이라는 의미이므로 컴포넌트로 관리
+ */
 @Component
 public class AESUtils {
     private static final String ALGORITHM = "AES";

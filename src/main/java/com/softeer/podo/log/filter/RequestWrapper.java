@@ -73,6 +73,9 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         return contents.toString(StandardCharsets.UTF_8);
     }
 
+    /**
+     * 헤더를 파싱하여 Map형태로 반환
+     */
     public Map<String, String> headerMap() {
         Map<String, String> headerMap = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
@@ -88,11 +91,18 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         return headerMap;
     }
 
+    /**
+     * 쿼리 파라미터를 파싱하여 Map형태로 반환
+     * <String, String[]> 형태의 Map에서 value를 파싱
+     */
     public Map<String, String> parameterMap() {
         Map<String, String> parameterMap = new HashMap<>();
         Map<String, String[]> parameterNames = request.getParameterMap();
+        // 쿼리 파라미터의 이름(key)
         for (String key : parameterNames.keySet()) {
+            // 쿼리 파라미터 값(value)
             String[] values = parameterNames.get(key);
+            // ,로 구분하여 map에 저장
             StringJoiner valueString = new StringJoiner(",");
             if (values != null) {
                 for (String value : values) {

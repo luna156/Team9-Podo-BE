@@ -7,9 +7,11 @@ import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.dto.response.ConfigEventRewardResponseDto;
 import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
 import com.softeer.podo.admin.model.dto.LotsUserListDto;
+import com.softeer.podo.admin.model.dto.response.GetAdminLogListResponseDto;
 import com.softeer.podo.admin.validation.LotsValidationSequence;
 import com.softeer.podo.admin.service.AdminService;
 import com.softeer.podo.common.response.CommonResponse;
+import com.softeer.podo.log.service.AdminLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AdminController {
 	private final AdminService adminService;
+    private final AdminLogService adminLogService;
 
 	@GetMapping("/eventlist")
 	@Operation(summary = "이벤트 목록 반환 Api")
@@ -76,4 +79,10 @@ public class AdminController {
 	public CommonResponse<LotsUserListDto> pickRandomLotsUser(){
 		return new CommonResponse<>(adminService.getLotsResult());
 	}
+
+    @GetMapping("/log")
+    @Operation(summary = "어드민 로그 리스트 조회")
+    public CommonResponse<GetAdminLogListResponseDto> getAdminLogs(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo) {
+        return new CommonResponse<>(adminLogService.getAdminLogs(pageNo));
+    }
 }

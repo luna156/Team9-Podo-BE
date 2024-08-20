@@ -15,6 +15,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * ControllerAdvice와 ExceptionHandler를 통해서 잡아내지 못한 예외들을 처리하는 필터
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class ExceptionHandleFilter extends OncePerRequestFilter {
