@@ -18,6 +18,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final TokenProvider tokenProvider;
 
+    /**
+     * request Authorization 헤더에서 Bearer 토큰을 추출하고, 토큰의 유효성을 검증하는 필터
+     * 토큰이 유효하다면 Attribute로 넘겨 컨트롤러에서 사용할 수 있게 하고,
+     * 유효하지 않다면 exception을 발생시킨다.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // Authorization 헤더에서 토큰 추출

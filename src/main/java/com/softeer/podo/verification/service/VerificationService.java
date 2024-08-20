@@ -56,10 +56,10 @@ public class VerificationService {
     }
 
     /**
-     * 인증된 토큰에 한해 새로운 토큰을 발급해준다.
+     * 인증된 토큰으로 요청할 경우, 새로운 토큰을 발급해준다.
      * @param name 사용자 이름
      * @param phoneNum 사용자 전화번호
-     * @return 새로운 토큰
+     * @return 새로운 accessToken
      */
     @Transactional
     public ReissueTokenResponseDto reissueToken(

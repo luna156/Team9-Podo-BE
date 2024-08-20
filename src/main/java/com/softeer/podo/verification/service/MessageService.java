@@ -32,6 +32,8 @@ public class MessageService {
 
     /**
      * 외부 API와 연결되어 휴대폰으로 인증코드를 발송한다.
+     * @param phoneNum 인증코드를 발송할 휴대폰 전화번호
+     * @param code 발송할 인증코드
      */
     public void sendVerificationMessage(String phoneNum, String code) {
         DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, MESSAGE_DOMAIN);

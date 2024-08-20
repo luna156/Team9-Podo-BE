@@ -3,6 +3,9 @@ package com.softeer.podo.common.utils;
 import org.slf4j.MDC;
 import org.slf4j.spi.MDCAdapter;
 
+/**
+ * Mdc에 값을 설정하고, 조회하기 위한 유틸리티 클래스
+ */
 public class MdcUtils {
     private static MDCAdapter mdc = MDC.getMDCAdapter();
     public static final String HEADER_MAP_MDC = "HEADER_MAP_MDC";
