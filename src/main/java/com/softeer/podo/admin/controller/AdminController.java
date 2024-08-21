@@ -14,6 +14,7 @@ import com.softeer.podo.common.response.CommonResponse;
 import com.softeer.podo.log.service.AdminLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -62,16 +63,22 @@ public class AdminController {
 	@Operation(summary = "선착순 응모 인원 반환 Api")
 	public CommonResponse<ArrivalUserListDto> getArrivalEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
 	                                                                  @RequestParam(required = false, value = "name") String name,
-	                                                                  @RequestParam(required = false, value = "phoneNum") String phoneNum){
-		return new CommonResponse<>(adminService.getArrivalApplicationList(pageNo, name, phoneNum));
+	                                                                  @RequestParam(required = false, value = "phoneNum") String phoneNum,
+	                                                                  @RequestParam(required = false, value = "createdAt")
+	                                                                      @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Date must be in format YYYY-MM-DD")
+	                                                                      String createdAt){
+		return new CommonResponse<>(adminService.getArrivalApplicationList(pageNo, name, phoneNum, createdAt));
 	}
 
 	@GetMapping("/lots/applicationList")
 	@Operation(summary = "랜덤추첨 응모 인원 반환 Api")
 	public CommonResponse<LotsUserListDto> getLotsEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
 	                                                            @RequestParam(required = false, value = "name") String name,
-	                                                            @RequestParam(required = false, value = "phoneNum") String phoneNum){
-		return new CommonResponse<>(adminService.getLotsApplicationList(pageNo, name, phoneNum));
+	                                                            @RequestParam(required = false, value = "phoneNum") String phoneNum,
+	                                                            @RequestParam(required = false, value = "createdAt")
+	                                                                @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Date must be in format YYYY-MM-DD")
+	                                                                String createdAt){
+		return new CommonResponse<>(adminService.getLotsApplicationList(pageNo, name, phoneNum, createdAt));
 	}
 
 	@GetMapping("/lots/random")

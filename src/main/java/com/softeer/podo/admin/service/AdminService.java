@@ -1,23 +1,20 @@
 package com.softeer.podo.admin.service;
 
 
+import com.softeer.podo.admin.exception.EventNotFoundException;
 import com.softeer.podo.admin.model.dto.*;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
-import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.dto.response.ConfigEventRewardResponseDto;
-import com.softeer.podo.admin.model.dto.ArrivalUserDto;
-import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.mapper.EventMapper;
 import com.softeer.podo.admin.model.mapper.UserMapper;
-import com.softeer.podo.admin.model.dto.LotsUserListDto;
 import com.softeer.podo.event.model.entity.ArrivalUser;
 import com.softeer.podo.event.model.entity.Event;
 import com.softeer.podo.event.model.entity.EventReward;
-import com.softeer.podo.admin.exception.EventNotFoundException;
-import com.softeer.podo.event.repository.EventRepository;
 import com.softeer.podo.event.model.entity.LotsUser;
 import com.softeer.podo.event.repository.ArrivalUserRepository;
+import com.softeer.podo.event.repository.EventRepository;
 import com.softeer.podo.event.repository.EventRewardRepository;
 import com.softeer.podo.event.repository.LotsUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +25,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -82,7 +81,7 @@ public class AdminService {
 						.map(EventMapper::eventRewardToEventRewardDto)
 						.toList();
 
-		return new ConfigEventRewardResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0,null, null));
+		return new ConfigEventRewardResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0,null, null, null));
 	}
 
 	@Transactional
@@ -113,18 +112,29 @@ public class AdminService {
 						.toList();
 		EventWeightDto eventWeightDto = EventMapper.eventWeightToEventWeightDto(lotsEvent.getEventWeight());
 
-		return new ConfigEventRewardResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0, null, null));
+		return new ConfigEventRewardResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0, null, null, null));
 	}
 
 	@Transactional
-	public ArrivalUserListDto getArrivalApplicationList(int pageNo, String name, String phoneNum) {
-		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+	public ArrivalUserListDto getArrivalApplicationList(int pageNo, String name, String phoneNum, String createdAtString) {
+		// string으로 들어온 createdAt을 변환
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate createdAt = null;
+		if(createdAtString != null) {
+			createdAt = LocalDate.parse(createdAtString, formatter);
+		}
+
+		// page 생성
 		Page<ArrivalUser> page;
+		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+
+		// 들어온 url parameter 기반으로 검색
 		if(name!=null){
-			page = arrivalUserRepository.findAllByNameLike(pageable, "%" + name + "%");
+			page = arrivalUserRepository.findAllByNameLikeAndCreatedAt(pageable, "%" + name + "%", createdAt);
 		}else if(phoneNum!=null){
-			page = arrivalUserRepository.findAllByPhoneNumLike(pageable, "%" + phoneNum + "%");
-		}else page = arrivalUserRepository.findAll(pageable);
+			page = arrivalUserRepository.findAllByPhoneNumLikeAndCreatedAt(pageable, "%" + phoneNum + "%", createdAt);
+		}else page = arrivalUserRepository.findAllByCreatedAt(pageable, createdAt);
+
 		ArrivalUserListDto arrivalUserListDto = UserMapper.ArrivalUserPageToArrivalUserListDto(page);
 		//선착순 이벤트 id
 		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
@@ -147,14 +157,25 @@ public class AdminService {
 	}
 
 	@Transactional
-	public LotsUserListDto getLotsApplicationList(int pageNo, String name, String phoneNum) {
-		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+	public LotsUserListDto getLotsApplicationList(int pageNo, String name, String phoneNum, String createdAtString) {
+		// string으로 들어온 createdAt을 변환
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate createdAt = null;
+		if(createdAtString != null) {
+			createdAt = LocalDate.parse(createdAtString, formatter);
+		}
+
+		// page 생성
 		Page<LotsUser> page;
+		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
+
+		// 들어온 url parameter 기반으로 검색
 		if(name!=null){
-			page = lotsUserRepository.findAllByNameLike(pageable, "%" + name + "%");
+			page = lotsUserRepository.findAllByNameLikeAndCreatedAt(pageable, "%" + name + "%", createdAt);
 		}else if(phoneNum!=null){
-			page = lotsUserRepository.findAllByPhoneNumLike(pageable, "%" + phoneNum + "%");
-		}else page = lotsUserRepository.findAll(pageable);
+			page = lotsUserRepository.findAllByPhoneNumLikeAndCreatedAt(pageable, "%" + phoneNum + "%", createdAt);
+		}else page = lotsUserRepository.findAllByCreatedAt(pageable, createdAt);
+
 		return UserMapper.LotsUserPageToLotsUserListDto(page);
 	}
 
@@ -213,7 +234,7 @@ public class AdminService {
 			lotsUserRepository.save(lotsUserList.get(i));
 		}
 
-		return getLotsApplicationList(0, null, null);
+		return getLotsApplicationList(0, null, null, null);
 	}
 
 	private Event updateEventByConfigDto(Long eventId, ConfigEventRequestDto dto) {
