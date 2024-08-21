@@ -36,6 +36,19 @@ spring:
     serialization:
       fail-on-empty-beans: false
 
+cloud:
+  aws:
+    s3:
+      bucket: ${BUCKET_NAME}
+    credentials:
+      access-key: ${BUCKET_ACCESS_KEY}
+      secret-key: ${BUCKET_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
 secret:
   jwt: ${SECRET_JWT}
 
