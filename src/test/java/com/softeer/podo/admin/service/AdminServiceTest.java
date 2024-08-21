@@ -3,12 +3,8 @@ package com.softeer.podo.admin.service;
 import com.softeer.podo.admin.model.dto.*;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
-import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.dto.response.ConfigEventRewardResponseDto;
-import com.softeer.podo.admin.model.dto.ArrivalUserDto;
-import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
-import com.softeer.podo.admin.model.dto.LotsUserDto;
-import com.softeer.podo.admin.model.dto.LotsUserListDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.event.model.entity.*;
 import com.softeer.podo.event.repository.ArrivalUserRepository;
 import com.softeer.podo.event.repository.EventRepository;
@@ -27,13 +23,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
-
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -57,10 +54,18 @@ class AdminServiceTest {
 	private static Event lotsEvent;
 	private static List<ArrivalUser> arrivalUserList;
 	private static List<LotsUser> lotsUserList;
+    MockMultipartFile mockImage;
 
-	@BeforeEach
+
+    @BeforeEach
 	void init() {
 		MockitoAnnotations.openMocks(this);
+        new MockMultipartFile(
+                "image_url",                // 파일 필드명
+                "testImage.png",                  // 원본 파일명
+                "image/png",                      // 파일 타입
+                "dummy image content".getBytes()  // 파일 데이터
+        );
 	}
 
 	@BeforeAll
@@ -183,10 +188,10 @@ class AdminServiceTest {
 		LocalDateTime startAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		LocalDateTime endAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		String tagImage = "image url";
-		ConfigEventRequestDto requestDto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
+		ConfigEventRequestDto requestDto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt);
 
 		//when
-		EventDto responseDto = adminService.configArrivalEvent(requestDto);
+		EventDto responseDto = adminService.configArrivalEvent(requestDto, mockImage);
 
 		//then
 		assertEquals(title, responseDto.getTitle());
@@ -211,10 +216,10 @@ class AdminServiceTest {
 		LocalDateTime startAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		LocalDateTime endAt = LocalDateTime.of(2024, 9, 6, 13, 00);
 		String tagImage = "image url";
-		ConfigEventRequestDto requestDto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt, tagImage);
+		ConfigEventRequestDto requestDto = new ConfigEventRequestDto(title, description, repeatDay, repeatTime, startAt, endAt);
 
 		//when
-		EventDto responseDto = adminService.configLotsEvent(requestDto);
+		EventDto responseDto = adminService.configLotsEvent(requestDto, null);
 
 		//then
 		assertEquals(title, responseDto.getTitle());
