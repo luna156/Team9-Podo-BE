@@ -1,6 +1,8 @@
 package com.softeer.podo.admin.service;
 
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.softeer.podo.admin.exception.S3RegisterFailureException;
 import com.softeer.podo.admin.model.dto.*;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
@@ -11,6 +13,7 @@ import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
 import com.softeer.podo.admin.model.mapper.EventMapper;
 import com.softeer.podo.admin.model.mapper.UserMapper;
 import com.softeer.podo.admin.model.dto.LotsUserListDto;
+import com.softeer.podo.common.utils.S3Utils;
 import com.softeer.podo.event.model.entity.ArrivalUser;
 import com.softeer.podo.event.model.entity.Event;
 import com.softeer.podo.event.model.entity.EventReward;
@@ -21,13 +24,16 @@ import com.softeer.podo.event.repository.ArrivalUserRepository;
 import com.softeer.podo.event.repository.EventRewardRepository;
 import com.softeer.podo.event.repository.LotsUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -42,20 +48,47 @@ public class AdminService {
 	private final Long lotsEventId = 2L;
 	private final int PAGE_SIZE = 10;
 
+    private final AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
+
 	@Transactional
 	public EventListResponseDto getEventList() {
 		return EventMapper.eventListToEventListResponseDto(eventRepository.findAll());
 	}
 
 	@Transactional
-	public EventDto configArrivalEvent(ConfigEventRequestDto dto) {
+	public EventDto configArrivalEvent(ConfigEventRequestDto dto, MultipartFile image) {
 		Event arrivalEvent = updateEventByConfigDto(arrivalEventId, dto);
+
+        String imageUri = null;
+        if(image!=null) { // 이미지가 null이 아닌 경우 s3 업로드
+            try {
+                imageUri = S3Utils.saveFile(amazonS3, bucket, image);
+            } catch (IOException e) {
+                throw new S3RegisterFailureException("리뷰 이미지 저장 중 오류가 발생했습니다.");
+            }
+        }
+        arrivalEvent.updateTagImageLink(imageUri);
+
 		return EventMapper.EventToEventDto(arrivalEvent);
 	}
 
 	@Transactional
-	public EventDto configLotsEvent(ConfigEventRequestDto dto) {
+	public EventDto configLotsEvent(ConfigEventRequestDto dto, MultipartFile image) {
 		Event lotsEvent = updateEventByConfigDto(lotsEventId, dto);
+
+        String imageUri = null;
+        if(image!=null) { // 이미지가 null이 아닌 경우 s3 업로드
+            try {
+                imageUri = S3Utils.saveFile(amazonS3, bucket, image);
+            } catch (IOException e) {
+                throw new S3RegisterFailureException("리뷰 이미지 저장 중 오류가 발생했습니다.");
+            }
+        }
+        lotsEvent.updateTagImageLink(imageUri);
+
 		return EventMapper.EventToEventDto(lotsEvent);
 	}
 
@@ -214,8 +247,7 @@ public class AdminService {
 				dto.getRepeatDay(),
 				dto.getRepeatTime(),
 				dto.getStartAt(),
-				dto.getEndAt(),
-				dto.getTagImage()
+				dto.getEndAt()
 		);
 		return event;
 	}

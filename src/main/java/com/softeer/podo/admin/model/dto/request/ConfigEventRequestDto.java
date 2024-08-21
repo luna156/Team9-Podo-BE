@@ -34,5 +34,4 @@ public class ConfigEventRequestDto {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime endAt;
 
-	private String tagImage;
 }
