@@ -18,6 +18,6 @@ public class TestExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CommonResponse<?> joseException(JOSEException e, HttpServletRequest request) {
         log.warn("TEST-001> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
-        return new CommonResponse<>(ErrorCode.INTERNAL_SERVER_ERROR);
+        return new CommonResponse<>(ErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 }

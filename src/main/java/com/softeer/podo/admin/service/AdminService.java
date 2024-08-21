@@ -113,6 +113,9 @@ public class AdminService {
 						.toList();
 		EventWeightDto eventWeightDto = EventMapper.eventWeightToEventWeightDto(lotsEvent.getEventWeight());
 
+
+		getLotsResult();
+
 		return new ConfigEventRewardResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0, null, null, null));
 	}
 
