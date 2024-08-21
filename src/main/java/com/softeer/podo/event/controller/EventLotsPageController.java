@@ -30,9 +30,7 @@ public class EventLotsPageController {
             // 해당 유저에 해당하는 적절한 이벤트 결과 페이지 찾기
             String redirectUrl = eventLotsService.getEventUrl(uniqueLink);
             // 이벤트 결과 페이지 반환
-//            response.setStatus(HttpServletResponse.SC_FOUND);
-//            response.setHeader("Location", "/type/"+redirectUrl);
-            return "/type/"+redirectUrl;
+            return "redirect:" + redirectUrl;
         } catch (Exception e) {
             // 에러 페이지로 리다이렉션
 //            response.setStatus(HttpServletResponse.SC_FOUND);

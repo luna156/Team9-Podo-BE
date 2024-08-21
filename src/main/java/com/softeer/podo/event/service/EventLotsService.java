@@ -83,25 +83,34 @@ public class EventLotsService {
      */
     @Transactional
     public LotsApplicationResponseDto applyEvent(AuthInfo authInfo, LotsApplicationRequestDto dto)  {
-        if(lotsUserRepository.existsByPhoneNum(authInfo.getPhoneNum())){
-            throw new ExistingUserException("이미 이벤트에 응모한 유저입니다.");
-        }
-
         // 유형 찾기
         TestResult testResult = testResultRepository.findById(dto.getResultTypeId())
                 .orElseThrow(() -> new InvalidResultTypeException("잘못된 Result Type 아이디입니다."));
 
         // 유저 저장
-        LotsUser savedUser = lotsUserRepository.save(
-                LotsUser.builder()
-                        .name(authInfo.getName())
-                        .phoneNum(authInfo.getPhoneNum())
-                        .role(Role.ROLE_USER)
-                        .testResult(testResult)
-                        .build()
-        );
+        LotsUser savedUser;
+        boolean applied = false;
+        if(!lotsUserRepository.existsByPhoneNum(authInfo.getPhoneNum())) {
+            savedUser = lotsUserRepository.save(
+                    LotsUser.builder()
+                            .name(authInfo.getName())
+                            .phoneNum(authInfo.getPhoneNum())
+                            .role(Role.ROLE_USER)
+                            .testResult(testResult)
+                            .build()
+            );
+            applied = true;
+        }else savedUser = lotsUserRepository.findByPhoneNum(authInfo.getPhoneNum())
+                .orElseThrow(() -> new UserNotExistException("사용자가 존재하지 않습니다."));
 
-        // 고유 링크 생성
+        // 고유 링크가 이미 있을때
+        if(lotsShareLinkRepository.existsByLotsUser(savedUser)){
+            LotsShareLink lotsShareLink = lotsShareLinkRepository.findByLotsUser(savedUser)
+                    .orElseThrow(() -> new LotsShareLinkNotExistsException("공유 링크가 존재하지 않습니다."));
+            return new LotsApplicationResponseDto(lotsShareLink.getShareLink(), applied);
+        }
+
+        // 공유 링크 생성
         String uniqueLink;
         try {
              uniqueLink = createUniqueLink(savedUser.getId());
@@ -114,7 +123,7 @@ public class EventLotsService {
                 new LotsShareLink(null, savedUser, 0L, uniqueLink)
         );
 
-        return new LotsApplicationResponseDto(uniqueLink);
+        return new LotsApplicationResponseDto(uniqueLink, applied);
     }
 
 
