@@ -7,14 +7,17 @@ import com.softeer.podo.event.exception.*;
 import com.softeer.podo.event.model.dto.WordCloudResponseDto;
 import com.softeer.podo.event.model.dto.request.LotsApplicationRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsCommentRequestDto;
+import com.softeer.podo.event.model.dto.request.LotsTypeByIdRequestDto;
 import com.softeer.podo.event.model.dto.request.LotsTypeRequestDto;
 import com.softeer.podo.event.model.dto.response.LotsApplicationResponseDto;
 import com.softeer.podo.event.model.dto.response.LotsCommentResponseDto;
 import com.softeer.podo.event.model.dto.response.LotsTypeResponseDto;
-import com.softeer.podo.event.model.dto.*;
 import com.softeer.podo.event.model.entity.*;
 import com.softeer.podo.event.model.mapper.LotsEventMapper;
-import com.softeer.podo.event.repository.*;
+import com.softeer.podo.event.repository.KeyWordRepository;
+import com.softeer.podo.event.repository.LotsShareLinkRepository;
+import com.softeer.podo.event.repository.LotsUserRepository;
+import com.softeer.podo.event.repository.TestResultRepository;
 import com.softeer.podo.event.util.Result;
 import com.softeer.podo.event.util.SelectionMap;
 import com.softeer.podo.security.AuthInfo;
@@ -54,6 +57,20 @@ public class EventLotsService {
         // 유형 선택
         Result result = selectionMap.getResult(dto.getSelection());
         TestResult testResult = testResultRepository.findByResult(result);
+
+        return lotsEventMapper.TestResultToApplicationDto(testResult);
+    }
+
+    /**
+     * 랜덤추천 이벤트에서 result id로 적절한 드라이버 타입 반환
+     * @param dto result id
+     * @return 유형테스트 결과
+     */
+    @Transactional(readOnly = true)
+    public LotsTypeResponseDto getProperDriverTypeById(LotsTypeByIdRequestDto dto)  {
+        // 유형 선택
+        TestResult testResult = testResultRepository.findById(dto.getResultTypeId())
+                .orElseThrow(() -> new InvalidResultTypeException("잘못된 Result Type 아이디입니다."));
 
         return lotsEventMapper.TestResultToApplicationDto(testResult);
     }
