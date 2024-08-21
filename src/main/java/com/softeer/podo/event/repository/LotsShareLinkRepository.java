@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface LotsShareLinkRepository extends JpaRepository<LotsShareLink, Long> {
+    boolean existsByLotsUser(LotsUser user);
     Optional<LotsShareLink> findByLotsUser(LotsUser user);
 }
