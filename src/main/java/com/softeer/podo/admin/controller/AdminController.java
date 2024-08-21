@@ -1,20 +1,19 @@
 package com.softeer.podo.admin.controller;
 
-import com.softeer.podo.admin.model.dto.*;
+import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
+import com.softeer.podo.admin.model.dto.EventDto;
+import com.softeer.podo.admin.model.dto.LotsUserListDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
-import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.dto.response.ConfigEventRewardResponseDto;
-import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
-import com.softeer.podo.admin.model.dto.LotsUserListDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.dto.response.GetAdminLogListResponseDto;
-import com.softeer.podo.admin.validation.LotsValidationSequence;
 import com.softeer.podo.admin.service.AdminService;
+import com.softeer.podo.admin.validation.LotsValidationSequence;
 import com.softeer.podo.common.response.CommonResponse;
 import com.softeer.podo.log.service.AdminLogService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -64,9 +63,7 @@ public class AdminController {
 	public CommonResponse<ArrivalUserListDto> getArrivalEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
 	                                                                  @RequestParam(required = false, value = "name") String name,
 	                                                                  @RequestParam(required = false, value = "phoneNum") String phoneNum,
-	                                                                  @RequestParam(required = false, value = "createdAt")
-	                                                                      @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Date must be in format YYYY-MM-DD")
-	                                                                      String createdAt){
+	                                                                  @RequestParam(required = false, value = "createdAt") String createdAt){
 		return new CommonResponse<>(adminService.getArrivalApplicationList(pageNo, name, phoneNum, createdAt));
 	}
 
@@ -75,9 +72,7 @@ public class AdminController {
 	public CommonResponse<LotsUserListDto> getLotsEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
 	                                                            @RequestParam(required = false, value = "name") String name,
 	                                                            @RequestParam(required = false, value = "phoneNum") String phoneNum,
-	                                                            @RequestParam(required = false, value = "createdAt")
-	                                                                @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Date must be in format YYYY-MM-DD")
-	                                                                String createdAt){
+	                                                            @RequestParam(required = false, value = "createdAt") String createdAt){
 		return new CommonResponse<>(adminService.getLotsApplicationList(pageNo, name, phoneNum, createdAt));
 	}
 

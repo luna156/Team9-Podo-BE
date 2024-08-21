@@ -17,6 +17,7 @@ import com.softeer.podo.event.repository.ArrivalUserRepository;
 import com.softeer.podo.event.repository.EventRepository;
 import com.softeer.podo.event.repository.EventRewardRepository;
 import com.softeer.podo.event.repository.LotsUserRepository;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -117,6 +118,11 @@ public class AdminService {
 
 	@Transactional
 	public ArrivalUserListDto getArrivalApplicationList(int pageNo, String name, String phoneNum, String createdAtString) {
+		// 형식 체크
+		if (createdAtString != null && !createdAtString.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
+			throw new ValidationException("날짜는 해당 형식이어야 합니다: YYYY-MM-DD");
+		}
+
 		// string으로 들어온 createdAt을 변환
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate createdAt = null;
@@ -158,6 +164,11 @@ public class AdminService {
 
 	@Transactional
 	public LotsUserListDto getLotsApplicationList(int pageNo, String name, String phoneNum, String createdAtString) {
+		// 형식 체크
+		if (createdAtString != null && !createdAtString.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
+			throw new ValidationException("날짜는 해당 형식이어야 합니다: YYYY-MM-DD");
+		}
+
 		// string으로 들어온 createdAt을 변환
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate createdAt = null;

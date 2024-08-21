@@ -2,8 +2,8 @@ package com.softeer.podo.common.exception;
 
 import com.softeer.podo.common.response.CommonResponse;
 import com.softeer.podo.common.response.ErrorCode;
-import com.softeer.podo.verification.exception.MessageSendFailException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.View;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,5 +30,12 @@ public class CommonExceptionHandler {
 			errors.put(fieldName, errorMessage);
 		});
 		return new CommonResponse<>(ErrorCode.VALID_ERROR, errors);
+	}
+
+	@ExceptionHandler(ValidationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public CommonResponse<?> constraintViolationException(ValidationException e, HttpServletRequest request) {
+		log.warn("COMMON-002> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+		return new CommonResponse<>(ErrorCode.VALID_ERROR, e.getMessage());
 	}
 }
