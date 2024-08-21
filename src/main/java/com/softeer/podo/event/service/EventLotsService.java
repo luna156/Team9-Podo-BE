@@ -187,6 +187,6 @@ public class EventLotsService {
 
     //TODO("프론트 공유페이지 링크 나오면 수정")
     private String createUniqueLink(Long userId) throws Exception {
-        return SERVER_HOST + ":" + SERVER_PORT + "/lots/link/" + UrlUtils.encode(aesUtils.encrypt(String.valueOf(userId)));
+        return SERVER_HOST + "/lots/link/" + UrlUtils.encode(aesUtils.encrypt(String.valueOf(userId)));
     }
 }
