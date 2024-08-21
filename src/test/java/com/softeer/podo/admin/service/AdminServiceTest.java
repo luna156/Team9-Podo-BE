@@ -237,6 +237,7 @@ class AdminServiceTest {
 		when(eventRepository.findById(1L)).thenReturn(Optional.of(arrivalEvent));
 		when(arrivalUserRepository.findAll()).thenReturn(arrivalUserList);
 		when(eventRewardRepository.findByEvent(arrivalEvent)).thenReturn(arrivalEvent.getEventRewardList());
+		when(arrivalUserRepository.findAllByCreatedAt(any(), any())).thenReturn(arrivalUserPage);
 		doAnswer(invocation -> {
 			arrivalEvent.getEventRewardList().clear();
 			return null;
@@ -292,6 +293,7 @@ class AdminServiceTest {
 		when(eventRepository.findById(2L)).thenReturn(Optional.of(lotsEvent));
 		when(lotsUserRepository.findAll()).thenReturn(lotsUserList);
 		when(eventRewardRepository.findByEvent(lotsEvent)).thenReturn(lotsEvent.getEventRewardList());
+		when(lotsUserRepository.findAllByCreatedAt(any(), any())).thenReturn(lotsUserPage);
 		doAnswer(invocation -> {
 			lotsEvent.getEventRewardList().clear();
 			return null;
@@ -341,6 +343,7 @@ class AdminServiceTest {
 		when(eventRepository.findById(2L)).thenReturn(Optional.of(lotsEvent));
 		when(lotsUserRepository.findAll()).thenReturn(lotsUserList);
 		when(lotsUserRepository.findAll((Pageable) any())).thenReturn(lotsUserPage);
+		when(lotsUserRepository.findAllByCreatedAt(any(), any())).thenReturn(lotsUserPage);
 
 		//when
 		LotsUserListDto responseDto = adminService.getLotsResult();
