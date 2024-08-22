@@ -3,7 +3,7 @@ server:
   port: 8080
   ssl:
     enabled: true
-    key-store: src/main/resources/lots-server.p12
+    key-store: ../lots-server.p12
     key-store-password: teampodo
     key-store-type: PKCS12
     key-alias: softeerbootcamp4th
