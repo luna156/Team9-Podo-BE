@@ -12,4 +12,6 @@ import lombok.NoArgsConstructor;
 public class LotsApplicationResponseDto {
     @NotBlank
     private String uniqueLink;
+    @NotBlank
+    private boolean applied;
 }

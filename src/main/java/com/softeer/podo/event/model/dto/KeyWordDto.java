@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class KeyWordDto {
-	private String keyword;
-	private int count;
+	private String name;
+	private int value;
 }

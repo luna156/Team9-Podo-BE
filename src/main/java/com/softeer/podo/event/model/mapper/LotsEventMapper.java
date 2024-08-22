@@ -36,7 +36,7 @@ public class LotsEventMapper {
 			KeyWordDto keyWordDto = new KeyWordDto(keyWord.getKeyword(), keyWord.getCount());
 			keyWordDtoList.add(keyWordDto);
 		}
-		keyWordDtoList.sort(Comparator.comparingInt(KeyWordDto::getCount).reversed());
+		keyWordDtoList.sort(Comparator.comparingInt(KeyWordDto::getValue).reversed());
 		return new WordCloudResponseDto(keyWordDtoList);
 	}
 }

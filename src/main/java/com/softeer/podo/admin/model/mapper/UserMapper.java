@@ -42,6 +42,7 @@ public class UserMapper {
 							.phoneNum(user.getPhoneNum())
 							.createdAt(user.getCreatedAt())
 							.reward(user.getReward())
+							.comment((user.getLotsComment() == null) ? null : user.getLotsComment().getComment())
 							.build()
 			);
 		}

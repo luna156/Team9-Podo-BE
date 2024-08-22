@@ -3,13 +3,12 @@ package com.softeer.podo.admin.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.softeer.podo.admin.exception.S3RegisterFailureException;
+import com.softeer.podo.admin.exception.EventNotFoundException;
 import com.softeer.podo.admin.model.dto.*;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
-import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.dto.response.ConfigEventRewardResponseDto;
-import com.softeer.podo.admin.model.dto.ArrivalUserDto;
-import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.mapper.EventMapper;
 import com.softeer.podo.admin.model.mapper.UserMapper;
 import com.softeer.podo.admin.model.dto.LotsUserListDto;
@@ -17,12 +16,12 @@ import com.softeer.podo.common.utils.S3Utils;
 import com.softeer.podo.event.model.entity.ArrivalUser;
 import com.softeer.podo.event.model.entity.Event;
 import com.softeer.podo.event.model.entity.EventReward;
-import com.softeer.podo.admin.exception.EventNotFoundException;
-import com.softeer.podo.event.repository.EventRepository;
 import com.softeer.podo.event.model.entity.LotsUser;
 import com.softeer.podo.event.repository.ArrivalUserRepository;
+import com.softeer.podo.event.repository.EventRepository;
 import com.softeer.podo.event.repository.EventRewardRepository;
 import com.softeer.podo.event.repository.LotsUserRepository;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,6 +32,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.io.IOException;
 import java.util.*;
 
@@ -115,7 +116,7 @@ public class AdminService {
 						.map(EventMapper::eventRewardToEventRewardDto)
 						.toList();
 
-		return new ConfigEventRewardResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0));
+		return new ConfigEventRewardResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0,null, null, null));
 	}
 
 	@Transactional
@@ -146,13 +147,37 @@ public class AdminService {
 						.toList();
 		EventWeightDto eventWeightDto = EventMapper.eventWeightToEventWeightDto(lotsEvent.getEventWeight());
 
-		return new ConfigEventRewardResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0));
+
+		getLotsResult();
+
+		return new ConfigEventRewardResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0, null, null, null));
 	}
 
 	@Transactional
-	public ArrivalUserListDto getArrivalApplicationList(int pageNo) {
+	public ArrivalUserListDto getArrivalApplicationList(int pageNo, String name, String phoneNum, String createdAtString) {
+		// 형식 체크
+		if (createdAtString != null && !createdAtString.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
+			throw new ValidationException("날짜는 해당 형식이어야 합니다: YYYY-MM-DD");
+		}
+
+		// string으로 들어온 createdAt을 변환
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate createdAt = null;
+		if(createdAtString != null) {
+			createdAt = LocalDate.parse(createdAtString, formatter);
+		}
+
+		// page 생성
+		Page<ArrivalUser> page;
 		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
-		Page<ArrivalUser> page = arrivalUserRepository.findAll(pageable);
+
+		// 들어온 url parameter 기반으로 검색
+		if(name!=null){
+			page = arrivalUserRepository.findAllByNameLikeAndCreatedAt(pageable, "%" + name + "%", createdAt);
+		}else if(phoneNum!=null){
+			page = arrivalUserRepository.findAllByPhoneNumLikeAndCreatedAt(pageable, "%" + phoneNum + "%", createdAt);
+		}else page = arrivalUserRepository.findAllByCreatedAt(pageable, createdAt);
+
 		ArrivalUserListDto arrivalUserListDto = UserMapper.ArrivalUserPageToArrivalUserListDto(page);
 		//선착순 이벤트 id
 		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
@@ -175,9 +200,30 @@ public class AdminService {
 	}
 
 	@Transactional
-	public LotsUserListDto getLotsApplicationList(int pageNo) {
+	public LotsUserListDto getLotsApplicationList(int pageNo, String name, String phoneNum, String createdAtString) {
+		// 형식 체크
+		if (createdAtString != null && !createdAtString.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
+			throw new ValidationException("날짜는 해당 형식이어야 합니다: YYYY-MM-DD");
+		}
+
+		// string으로 들어온 createdAt을 변환
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate createdAt = null;
+		if(createdAtString != null) {
+			createdAt = LocalDate.parse(createdAtString, formatter);
+		}
+
+		// page 생성
+		Page<LotsUser> page;
 		Pageable pageable = PageRequest.of(pageNo, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id"));
-		Page<LotsUser> page = lotsUserRepository.findAll(pageable);
+
+		// 들어온 url parameter 기반으로 검색
+		if(name!=null){
+			page = lotsUserRepository.findAllByNameLikeAndCreatedAt(pageable, "%" + name + "%", createdAt);
+		}else if(phoneNum!=null){
+			page = lotsUserRepository.findAllByPhoneNumLikeAndCreatedAt(pageable, "%" + phoneNum + "%", createdAt);
+		}else page = lotsUserRepository.findAllByCreatedAt(pageable, createdAt);
+
 		return UserMapper.LotsUserPageToLotsUserListDto(page);
 	}
 
@@ -236,7 +282,7 @@ public class AdminService {
 			lotsUserRepository.save(lotsUserList.get(i));
 		}
 
-		return getLotsApplicationList(0);
+		return getLotsApplicationList(0, null, null, null);
 	}
 
 	private Event updateEventByConfigDto(Long eventId, ConfigEventRequestDto dto) {

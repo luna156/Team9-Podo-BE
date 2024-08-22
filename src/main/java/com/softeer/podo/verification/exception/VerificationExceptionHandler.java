@@ -17,20 +17,20 @@ public class VerificationExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public CommonResponse<?> messageSendFailException(MessageSendFailException e, HttpServletRequest request) {
         log.warn("VERIFICATION-001> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
-        return new CommonResponse<>(ErrorCode.INTERNAL_SERVER_ERROR);
+        return new CommonResponse<>(ErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(TokenNotMatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResponse<?> tokenNotMatchException(TokenNotMatchException e, HttpServletRequest request) {
         log.warn("VERIFICATION-002> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
-        return new CommonResponse<>(ErrorCode.INVALID_VERIFICATION_TOKEN_ERROR);
+        return new CommonResponse<>(ErrorCode.INVALID_VERIFICATION_TOKEN_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(DuplicatePhoneNumException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResponse<?> duplicatePhoneNumException(DuplicatePhoneNumException e, HttpServletRequest request) {
         log.warn("VERIFICATION-003> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
-        return new CommonResponse<>(ErrorCode.DUPLICATE_PHONENUM_ERROR);
+        return new CommonResponse<>(ErrorCode.DUPLICATE_PHONENUM_ERROR, e.getMessage());
     }
 }

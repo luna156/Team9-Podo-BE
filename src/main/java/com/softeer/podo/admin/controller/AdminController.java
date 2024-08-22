@@ -1,15 +1,15 @@
 package com.softeer.podo.admin.controller;
 
-import com.softeer.podo.admin.model.dto.*;
+import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
+import com.softeer.podo.admin.model.dto.EventDto;
+import com.softeer.podo.admin.model.dto.LotsUserListDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRequestDto;
 import com.softeer.podo.admin.model.dto.request.ConfigEventRewardRequestDto;
-import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.dto.response.ConfigEventRewardResponseDto;
-import com.softeer.podo.admin.model.dto.ArrivalUserListDto;
-import com.softeer.podo.admin.model.dto.LotsUserListDto;
+import com.softeer.podo.admin.model.dto.response.EventListResponseDto;
 import com.softeer.podo.admin.model.dto.response.GetAdminLogListResponseDto;
-import com.softeer.podo.admin.validation.LotsValidationSequence;
 import com.softeer.podo.admin.service.AdminService;
+import com.softeer.podo.admin.validation.LotsValidationSequence;
 import com.softeer.podo.common.response.CommonResponse;
 import com.softeer.podo.log.service.AdminLogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,14 +67,20 @@ public class AdminController {
 
 	@GetMapping("/arrival/applicationList")
 	@Operation(summary = "선착순 응모 인원 반환 Api")
-	public CommonResponse<ArrivalUserListDto> getArrivalEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo){
-		return new CommonResponse<>(adminService.getArrivalApplicationList(pageNo));
+	public CommonResponse<ArrivalUserListDto> getArrivalEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+	                                                                  @RequestParam(required = false, value = "name") String name,
+	                                                                  @RequestParam(required = false, value = "phoneNum") String phoneNum,
+	                                                                  @RequestParam(required = false, value = "createdAt") String createdAt){
+		return new CommonResponse<>(adminService.getArrivalApplicationList(pageNo, name, phoneNum, createdAt));
 	}
 
 	@GetMapping("/lots/applicationList")
 	@Operation(summary = "랜덤추첨 응모 인원 반환 Api")
-	public CommonResponse<LotsUserListDto> getLotsEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo){
-		return new CommonResponse<>(adminService.getLotsApplicationList(pageNo));
+	public CommonResponse<LotsUserListDto> getLotsEventUserList(@RequestParam(required = false, defaultValue = "0", value = "page") int pageNo,
+	                                                            @RequestParam(required = false, value = "name") String name,
+	                                                            @RequestParam(required = false, value = "phoneNum") String phoneNum,
+	                                                            @RequestParam(required = false, value = "createdAt") String createdAt){
+		return new CommonResponse<>(adminService.getLotsApplicationList(pageNo, name, phoneNum, createdAt));
 	}
 
 	@GetMapping("/lots/random")

@@ -17,7 +17,7 @@ public class AdminExceptionHandler {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public CommonResponse<?> eventNotFoundException(EventNotFoundException e, HttpServletRequest request) {
 		log.warn("ADMIN-001> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
-		return new CommonResponse<>(ErrorCode.EVENT_NOT_FOUND_ERROR);
+		return new CommonResponse<>(ErrorCode.EVENT_NOT_FOUND_ERROR, e.getMessage());
 	}
 
     @ExceptionHandler(S3RegisterFailureException.class)
