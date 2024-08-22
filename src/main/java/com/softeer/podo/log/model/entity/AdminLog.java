@@ -23,7 +23,7 @@ public class AdminLog extends DateEntity {
     private String requestPath;
     @Column(length = 1000)
     private String requestHeader;
-    @Column(length = 1000)
+    @Column(length = 10000)
     private String requestBody;
 
 }

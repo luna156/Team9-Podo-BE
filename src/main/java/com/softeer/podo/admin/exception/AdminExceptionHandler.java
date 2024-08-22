@@ -20,4 +20,10 @@ public class AdminExceptionHandler {
 		return new CommonResponse<>(ErrorCode.EVENT_NOT_FOUND_ERROR, e.getMessage());
 	}
 
+    @ExceptionHandler(S3RegisterFailureException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public CommonResponse<?> s3RegisterFailureException(S3RegisterFailureException e, HttpServletRequest request) {
+        log.warn("ADMIN-002> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.S3_REGISTER_IMAGE_FAILURE_ERROR);
+    }
 }

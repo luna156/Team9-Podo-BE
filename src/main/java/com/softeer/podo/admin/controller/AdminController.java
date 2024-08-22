@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -36,14 +37,20 @@ public class AdminController {
 
 	@PutMapping("/arrival/config")
 	@Operation(summary = "선착순 이벤트 수정 Api")
-	public CommonResponse<EventDto> configArrivalEvent(@RequestBody @Valid ConfigEventRequestDto dto){
-		return new CommonResponse<>(adminService.configArrivalEvent(dto));
+	public CommonResponse<EventDto> configArrivalEvent(
+            @RequestPart(value = "dto") ConfigEventRequestDto dto,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ){
+		return new CommonResponse<>(adminService.configArrivalEvent(dto, file));
 	}
 
 	@PutMapping("/lots/config")
 	@Operation(summary = "랜덤추첨 이벤트 수정 Api")
-	public CommonResponse<EventDto> configLotsEvent(@RequestBody @Valid ConfigEventRequestDto dto){
-		return new CommonResponse<>(adminService.configLotsEvent(dto));
+	public CommonResponse<EventDto> configLotsEvent(
+            @RequestPart(value = "dto") @Valid ConfigEventRequestDto dto,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ){
+		return new CommonResponse<>(adminService.configLotsEvent(dto, file));
 	}
 
 	@PutMapping("/arrival/rewardconfig")

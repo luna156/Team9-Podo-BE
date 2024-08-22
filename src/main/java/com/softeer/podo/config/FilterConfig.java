@@ -1,7 +1,8 @@
 package com.softeer.podo.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.softeer.podo.log.filter.RequestCollectionFilter;
+import com.softeer.podo.log.filter.RequestJsonBodyCollectionFilter;
+import com.softeer.podo.log.filter.RequestMultipartBodyCollectionFilter;
 import com.softeer.podo.security.jwt.ExceptionHandleFilter;
 import com.softeer.podo.security.jwt.JwtAuthenticationFilter;
 import com.softeer.podo.security.jwt.TokenProvider;
@@ -39,11 +40,22 @@ public class FilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<RequestCollectionFilter> requestCollectionFilter() {
-        FilterRegistrationBean<RequestCollectionFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new RequestCollectionFilter());
-        registrationBean.addUrlPatterns("/admin/*"); // 필터를 적용할 URL 패턴
+    public FilterRegistrationBean<RequestMultipartBodyCollectionFilter> requestJsonCollectionFilter() {
+        FilterRegistrationBean<RequestMultipartBodyCollectionFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new RequestMultipartBodyCollectionFilter());
+        registrationBean.addUrlPatterns("/admin/arrival/config"); // 필터를 적용할 URL 패턴
+        registrationBean.addUrlPatterns("/admin/lots/config"); // 필터를 적용할 URL 패턴
         registrationBean.setOrder(3); // 필터의 순서 (숫자가 낮을수록 먼저 실행됨)
+        return registrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean<RequestJsonBodyCollectionFilter> requestJsonBodyCollectionFilter() {
+        FilterRegistrationBean<RequestJsonBodyCollectionFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new RequestJsonBodyCollectionFilter());
+        registrationBean.addUrlPatterns("/admin/arrival/rewardconfig"); // 필터를 적용할 URL 패턴
+        registrationBean.addUrlPatterns("/admin/lots/rewardconfig"); // 필터를 적용할 URL 패턴
+        registrationBean.setOrder(4); // 필터의 순서 (숫자가 낮을수록 먼저 실행됨)
         return registrationBean;
     }
 }

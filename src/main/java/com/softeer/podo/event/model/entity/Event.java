@@ -51,14 +51,20 @@ public class Event extends DateEntity {
     @OneToOne(mappedBy = "event" , orphanRemoval = true, cascade = CascadeType.ALL)
     private EventWeight eventWeight;
 
-    public void updateEvent(String title, String description, String repeatDay, LocalTime repeatTime, LocalDateTime startAt, LocalDateTime endAt, String tagImage) {
+    public void updateEvent(String title, String description, String repeatDay, LocalTime repeatTime, LocalDateTime startAt, LocalDateTime endAt) {
         this.title = title;
         this.description = description;
         this.repeatDay = repeatDay;
         this.repeatTime = repeatTime;
         this.startAt = startAt;
         this.endAt = endAt;
-        this.tagImage = tagImage;
     }
-    public void updateEventRewardList(List<EventReward> eventRewardList) {this.eventRewardList = eventRewardList;}
+
+    public void updateEventRewardList(List<EventReward> eventRewardList) {
+        this.eventRewardList = eventRewardList;
+    }
+
+    public void updateTagImageLink(String imageLink) {
+        this.tagImage = imageLink;
+    }
 }

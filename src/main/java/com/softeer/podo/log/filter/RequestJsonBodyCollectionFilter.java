@@ -10,7 +10,10 @@ import java.io.IOException;
 
 import static com.softeer.podo.common.utils.MdcUtils.*;
 
-public class RequestCollectionFilter extends OncePerRequestFilter {
+/**
+ * 일반적인 Json Body를 로깅하기 위해서 Mdc에 저장하는 필터
+ */
+public class RequestJsonBodyCollectionFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -18,7 +21,6 @@ public class RequestCollectionFilter extends OncePerRequestFilter {
         setJsonValueAndPutMdc(HEADER_MAP_MDC, wrapRequest.headerMap());
         setJsonValueAndPutMdc(PARAMETER_MAP_MDC, wrapRequest.parameterMap());
         putMdc(BODY_MDC, wrapRequest.getContents());
-//        setJsonValueAndPutMdc(BODY_MDC, wrapRequest.body());
         putMdc(REQUEST_URI_MDC, wrapRequest.getRequestUri());
 
         try {
