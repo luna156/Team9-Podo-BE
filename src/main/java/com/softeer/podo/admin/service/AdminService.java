@@ -59,6 +59,12 @@ public class AdminService {
 		return EventMapper.eventListToEventListResponseDto(eventRepository.findAll());
 	}
 
+    /**
+     * 이미지 파일을 받아서 S3에 업로드하고, 선착순 이벤트 정보를 수정한 후 정보를 반환해준다.
+     * @param dto 이벤트 업로드 정보
+     * @param image 이벤트에 업로드할 이미지 파일
+     * @return 업로드된 이벤트 정보
+     */
 	@Transactional
 	public EventDto configArrivalEvent(ConfigEventRequestDto dto, MultipartFile image) {
 		Event arrivalEvent = updateEventByConfigDto(ARRIVAL_EVENT_ID, dto);
@@ -76,6 +82,12 @@ public class AdminService {
 		return EventMapper.EventToEventDto(arrivalEvent);
 	}
 
+    /**
+     * 이미지 파일을 받아서 S3에 업로드하고, 랜덤 이벤트 정보를 수정한 후 정보를 반환해준다.
+     * @param dto 이벤트 업로드 정보
+     * @param image 이벤트에 업로드할 이미지 파일
+     * @return 업로드된 이벤트 정보
+     */
 	@Transactional
 	public EventDto configLotsEvent(ConfigEventRequestDto dto, MultipartFile image) {
 		Event lotsEvent = updateEventByConfigDto(LOTS_EVENT_ID, dto);

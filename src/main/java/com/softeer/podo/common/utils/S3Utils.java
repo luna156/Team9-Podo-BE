@@ -7,6 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.UUID;
 
+/**
+ * S3 버킷에 파일을 올리고, 올라간 S3의 uri path를 반환하는 메서드
+ */
 public class S3Utils {
 
     public static String saveFile(AmazonS3 amazonS3, String bucket, MultipartFile multipartFile) throws IOException {

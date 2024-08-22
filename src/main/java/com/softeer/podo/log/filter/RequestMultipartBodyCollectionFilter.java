@@ -11,7 +11,7 @@ import java.io.IOException;
 import static com.softeer.podo.common.utils.MdcUtils.*;
 
 /**
- * 일반적인 Json Body를 로깅하기 위해서 Mdc에 저장하는 필터
+ * Multipart 파일을 로깅하기 위해서 Mdc에 저장하는 필터
  */
 public class RequestMultipartBodyCollectionFilter extends OncePerRequestFilter {
 

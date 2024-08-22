@@ -7,6 +7,9 @@ import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Request에서 다양한 정보들을 파싱하기 위한 유틸리티 클래스
+ */
 public class RequestUtils {
 
     public static Map<String, String> headerMap(HttpServletRequest request) {
@@ -33,7 +36,7 @@ public class RequestUtils {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         Collection<Part> parts = request.getParts();
-        for (Part part : parts) {
+        for(Part part : parts) {
             // 멀티파트 파일 처리 로직
             String name = part.getName();
 //            String filename = part.get();
@@ -48,13 +51,13 @@ public class RequestUtils {
         Map<String, String> parameterMap = new HashMap<>();
         Map<String, String[]> parameterNames = request.getParameterMap();
         // 쿼리 파라미터의 이름(key)
-        for (String key : parameterNames.keySet()) {
+        for (String key: parameterNames.keySet()) {
             // 쿼리 파라미터 값(value)
             String[] values = parameterNames.get(key);
             // ,로 구분하여 map에 저장
             StringJoiner valueString = new StringJoiner(",");
             if (values != null) {
-                for (String value : values) {
+                for (String value: values) {
                     valueString.add(value);
                 }
             }
