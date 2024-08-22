@@ -96,7 +96,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
         List<Info> infos = parseMultipart(body, delimiter);
         for(Info info: infos) {
             // 파일이 아니라면 로깅을 위해 저장
-            if(!info.getHeaders().get(CONTENT_DISPOSITION_HEADER).contains("filename")) {
+            if(!info.getHeaders().get(CONTENT_DISPOSITION_HEADER).contains("name=\"file\"")) {
                 String partJson = new String(info.getBody());
                 putMdc(BODY_MDC, partJson);
             }
