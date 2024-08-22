@@ -46,15 +46,15 @@ public class MessageReleaseService {
         message.setText(makeMessage(code));
 
         try {
-            messageApiService.send(message); // TODO("실제 메시지 발송되도록 수정")
+//            messageApiService.send(message); // TODO("실제 메시지 발송되도록 수정")
         }
-        catch (NurigoMessageNotReceivedException exception) {
-            List<FailedMessage> failedMessageList = exception.getFailedMessageList();
-            for (FailedMessage failedMessage : failedMessageList) {
-                log.info("Message Send Failed! :: {}", failedMessage);
-            }
-            throw new MessageSendFailException("메시지 전송에 실패했습니다.");
-        }
+//        catch (NurigoMessageNotReceivedException exception) {
+//            List<FailedMessage> failedMessageList = exception.getFailedMessageList();
+//            for (FailedMessage failedMessage : failedMessageList) {
+//                log.info("Message Send Failed! :: {}", failedMessage);
+//            }
+//            throw new MessageSendFailException("메시지 전송에 실패했습니다.");
+//        }
         catch (Exception exception) {
             throw new MessageSendFailException("기타 이유로 메시지 전송에 실패했습니다.");
         }
