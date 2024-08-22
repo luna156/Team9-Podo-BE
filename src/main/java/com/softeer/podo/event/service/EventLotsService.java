@@ -45,6 +45,7 @@ public class EventLotsService {
     private String SERVER_HOST;
     @Value("${server.port}")
     private String SERVER_PORT;
+    private String SHARE_LINK_BASE_URL = "https://www.hyundaiseltos.site/share.html";
 
 
     /**
@@ -113,7 +114,7 @@ public class EventLotsService {
         // 공유 링크 생성
         String uniqueLink;
         try {
-             uniqueLink = createUniqueLink(savedUser.getId());
+             uniqueLink = createUniqueLink(savedUser.getId(), savedUser.getTestResult().getId());
         } catch (Exception e) {
             throw new AESExecutionException("userId {"+savedUser.getId()+"} 암호화 과정 중 오류가 발생했습니다.");
         }
@@ -176,7 +177,7 @@ public class EventLotsService {
         findUserShareLink.increaseCount();
 
         // 해당 유저의 유형 링크 반환
-        return findUser.getTestResult().getUrl();
+        return uniqueLink;
     }
 
     @Transactional
@@ -186,7 +187,7 @@ public class EventLotsService {
     }
 
     //TODO("프론트 공유페이지 링크 나오면 수정")
-    private String createUniqueLink(Long userId) throws Exception {
-        return SERVER_HOST + "/lots/link/" + UrlUtils.encode(aesUtils.encrypt(String.valueOf(userId)));
+    private String createUniqueLink(Long userId, Long resultId) throws Exception {
+        return SHARE_LINK_BASE_URL+ "?id=" + resultId + "&UID=" + UrlUtils.encode(aesUtils.encrypt(String.valueOf(userId)));
     }
 }
