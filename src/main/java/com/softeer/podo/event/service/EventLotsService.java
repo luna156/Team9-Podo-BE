@@ -45,6 +45,7 @@ public class EventLotsService {
     private String SERVER_HOST;
     @Value("${server.port}")
     private String SERVER_PORT;
+    private String SHARE_LINK_BASE_URL = "https://www.hyundaiseltos.site/share.html";
 
 
     /**
@@ -113,7 +114,7 @@ public class EventLotsService {
         // 공유 링크 생성
         String uniqueLink;
         try {
-             uniqueLink = createUniqueLink(savedUser.getId());
+             uniqueLink = createUniqueLink(savedUser.getId(), savedUser.getTestResult().getId());
         } catch (Exception e) {
             throw new AESExecutionException("userId {"+savedUser.getId()+"} 암호화 과정 중 오류가 발생했습니다.");
         }
@@ -159,9 +160,9 @@ public class EventLotsService {
 
 
     /**
-     * 사용자의 고유 링크를 받고 복호화한 후 유형 링크 반환
+     * 사용자의 고유값을 받고 복호화한 후 공유 링크의 count를 올린 뒤 고유값 다시 반환
      * @param uniqueLink 사용자의 고유 링크
-     * @return 유형 페이지 url
+     * @return 고유값
      */
     @Transactional
     public String getEventUrl(String uniqueLink) throws Exception {
@@ -176,17 +177,27 @@ public class EventLotsService {
         findUserShareLink.increaseCount();
 
         // 해당 유저의 유형 링크 반환
-        return findUser.getTestResult().getUrl();
+        return uniqueLink;
     }
 
+    /**
+     * 워드 클라우드용 단어 리스트를 뽑아내는 api
+     * @return 단어명 및 comment에 등장한 누계 횟수를 담은 dto
+     */
     @Transactional
     public WordCloudResponseDto getWordCloud() {
         List<KeyWord> keyWordList = keyWordRepository.findAll();
         return lotsEventMapper.KeyWordListToWordCloudResponseDto(keyWordList);
     }
 
-    //TODO("프론트 공유페이지 링크 나오면 수정")
-    private String createUniqueLink(Long userId) throws Exception {
-        return SERVER_HOST + ":" + SERVER_PORT + "/lots/link/" + UrlUtils.encode(aesUtils.encrypt(String.valueOf(userId)));
+    /**
+     * uid와 result id 기반으로 FE의 공유 결과 페이지의 url을 생성
+     * @param userId 사용자 id
+     * @param resultId 유형테스트 결과 id
+     * @return 해당 사용자의 공유 링크
+     * @throws Exception aesUtils에서 나오는 exception
+     */
+    private String createUniqueLink(Long userId, Long resultId) throws Exception {
+        return SHARE_LINK_BASE_URL+ "?id=" + resultId + "&UID=" + UrlUtils.encode(aesUtils.encrypt(String.valueOf(userId)));
     }
 }

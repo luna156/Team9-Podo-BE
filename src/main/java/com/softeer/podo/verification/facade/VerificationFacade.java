@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.CompletableFuture;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -30,10 +32,10 @@ public class VerificationFacade {
      * @param dto 사용자 정보
      */
     @Transactional
-    public void claimVerificationCode(ClaimVerificationRequestDto dto) {
+    public CompletableFuture<Void> claimVerificationCode(ClaimVerificationRequestDto dto) {
         String createdCode = verificationService.createAndSaveCode(dto.getName(), dto.getPhoneNum());
-//        messageService.sendVerificationMessage(dto.getPhoneNum(), createdCode);
-        log.info("created code for {} = {}", dto.getName(), createdCode); // TODO("remove")
+        log.info("created code for {} = {}", dto.getName(), createdCode);
+        return messageService.sendVerificationMessage(dto.getPhoneNum(), createdCode);
     }
 
     /**
