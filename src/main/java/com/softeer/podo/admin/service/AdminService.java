@@ -45,8 +45,8 @@ public class AdminService {
 	private final ArrivalUserRepository arrivalUserRepository;
 	private final EventRewardRepository eventRewardRepository;
 
-	private final Long arrivalEventId = 1L;
-	private final Long lotsEventId = 2L;
+	private final Long ARRIVAL_EVENT_ID = 1L;
+	private final Long LOTS_EVENT_ID = 2L;
 	private final int PAGE_SIZE = 10;
 
     private final AmazonS3 amazonS3;
@@ -61,7 +61,7 @@ public class AdminService {
 
 	@Transactional
 	public EventDto configArrivalEvent(ConfigEventRequestDto dto, MultipartFile image) {
-		Event arrivalEvent = updateEventByConfigDto(arrivalEventId, dto);
+		Event arrivalEvent = updateEventByConfigDto(ARRIVAL_EVENT_ID, dto);
 
         String imageUri = null;
         if(image!=null) { // 이미지가 null이 아닌 경우 s3 업로드
@@ -78,7 +78,7 @@ public class AdminService {
 
 	@Transactional
 	public EventDto configLotsEvent(ConfigEventRequestDto dto, MultipartFile image) {
-		Event lotsEvent = updateEventByConfigDto(lotsEventId, dto);
+		Event lotsEvent = updateEventByConfigDto(LOTS_EVENT_ID, dto);
 
         String imageUri = null;
         if(image!=null) { // 이미지가 null이 아닌 경우 s3 업로드
@@ -95,7 +95,7 @@ public class AdminService {
 
 	@Transactional
 	public ConfigEventRewardResponseDto configArrivalEventReward(ConfigEventRewardRequestDto dto) {
-		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
+		Event arrivalEvent = eventRepository.findById(ARRIVAL_EVENT_ID).orElseThrow(EventNotFoundException::new);
 		List<EventReward> arrivalRewards = eventRewardRepository.findByEvent(arrivalEvent);
 		eventRewardRepository.deleteAllInBatch(arrivalRewards);
 
@@ -121,7 +121,7 @@ public class AdminService {
 
 	@Transactional
 	public ConfigEventRewardResponseDto configLotsEventReward(ConfigEventRewardRequestDto dto) {
-		Event lotsEvent = eventRepository.findById(lotsEventId).orElseThrow(EventNotFoundException::new);
+		Event lotsEvent = eventRepository.findById(LOTS_EVENT_ID).orElseThrow(EventNotFoundException::new);
 		List<EventReward> lotsRewards = eventRewardRepository.findByEvent(lotsEvent);
 		eventRewardRepository.deleteAllInBatch(lotsRewards);
 
@@ -180,7 +180,7 @@ public class AdminService {
 
 		ArrivalUserListDto arrivalUserListDto = UserMapper.ArrivalUserPageToArrivalUserListDto(page);
 		//선착순 이벤트 id
-		Event arrivalEvent = eventRepository.findById(arrivalEventId).orElseThrow(EventNotFoundException::new);
+		Event arrivalEvent = eventRepository.findById(ARRIVAL_EVENT_ID).orElseThrow(EventNotFoundException::new);
 		List<EventReward> eventRewardList = arrivalEvent.getEventRewardList();
 		// 보상 순위 기준으로 정렬
 		eventRewardList.sort(Comparator.comparingInt(EventReward::getRewardRank));
@@ -230,7 +230,7 @@ public class AdminService {
 	@Transactional
 	public LotsUserListDto getLotsResult() {
 		//랜덤 추첨 이벤트
-		Event lotsEvent = eventRepository.findById(lotsEventId).orElseThrow(EventNotFoundException::new);
+		Event lotsEvent = eventRepository.findById(LOTS_EVENT_ID).orElseThrow(EventNotFoundException::new);
 		//보상 리스트
 		List<EventReward> eventRewardList = lotsEvent.getEventRewardList();
 		//응모 목록
