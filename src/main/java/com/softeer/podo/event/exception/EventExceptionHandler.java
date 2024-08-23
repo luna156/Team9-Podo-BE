@@ -57,7 +57,7 @@ public class EventExceptionHandler {
     }
 
     @ExceptionHandler(InvalidResultTypeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResponse<?> invalidResultTypeException(InvalidResultTypeException e,  HttpServletRequest request) {
         log.warn("LOTS-007> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
         return new CommonResponse<>(ErrorCode.INVALID_RESULT_TYPE_ERROR, e.getMessage());

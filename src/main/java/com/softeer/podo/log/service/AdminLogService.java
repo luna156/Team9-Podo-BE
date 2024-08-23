@@ -42,6 +42,8 @@ public class AdminLogService {
 
     /**
      * Admin 로그 전체 불러오기
+     * @param pageNo 페이징 번호
+     * @return 어드민 로그 목록
      */
     @Transactional(readOnly = true)
     public GetAdminLogListResponseDto getAdminLogs(int pageNo) {

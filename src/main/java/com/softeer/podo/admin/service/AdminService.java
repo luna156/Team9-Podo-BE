@@ -64,6 +64,7 @@ public class AdminService {
      * @param dto 이벤트 업로드 정보
      * @param image 이벤트에 업로드할 이미지 파일
      * @return 업로드된 이벤트 정보
+     * @throws S3RegisterFailureException s3 저장 오류
      */
 	@Transactional
 	public EventDto configArrivalEvent(ConfigEventRequestDto dto, MultipartFile image) {
@@ -87,6 +88,7 @@ public class AdminService {
      * @param dto 이벤트 업로드 정보
      * @param image 이벤트에 업로드할 이미지 파일
      * @return 업로드된 이벤트 정보
+     * @throws S3RegisterFailureException s3 저장 오류
      */
 	@Transactional
 	public EventDto configLotsEvent(ConfigEventRequestDto dto, MultipartFile image) {
@@ -105,6 +107,12 @@ public class AdminService {
 		return EventMapper.EventToEventDto(lotsEvent);
 	}
 
+	/**
+	 * 선착순 이벤트 상품 수정 api
+	 * @param dto 상품 리스트 정보가 담겨있는 dto
+	 * @return 수정된 상품 리스트 및 그에따른 사용자 list
+	 * @throws EventNotFoundException 500 에러 - 이벤트를 찾을 수 없음
+	 */
 	@Transactional
 	public ConfigEventRewardResponseDto configArrivalEventReward(ConfigEventRewardRequestDto dto) {
 		Event arrivalEvent = eventRepository.findById(ARRIVAL_EVENT_ID).orElseThrow(EventNotFoundException::new);
@@ -131,6 +139,12 @@ public class AdminService {
 		return new ConfigEventRewardResponseDto(eventRewardDtoList, null, getArrivalApplicationList(0,null, null, null));
 	}
 
+	/**
+	 * 선착순 이벤트 상품 수정 api
+	 * @param dto 상품 리스트 및 가중치 정보가 담겨있는 dto
+	 * @return 수정된 상품 리스트 및 가중치 정보, 그리고 그에따른 사용자 list
+	 * @throws EventNotFoundException 500 에러 - 이벤트를 찾을 수 없음
+	 */
 	@Transactional
 	public ConfigEventRewardResponseDto configLotsEventReward(ConfigEventRewardRequestDto dto) {
 		Event lotsEvent = eventRepository.findById(LOTS_EVENT_ID).orElseThrow(EventNotFoundException::new);
@@ -165,6 +179,15 @@ public class AdminService {
 		return new ConfigEventRewardResponseDto(eventRewardDtoList, eventWeightDto, getLotsApplicationList(0, null, null, null));
 	}
 
+	/**
+	 * 이벤트 상품이 적용된 선착순 사용자 목록 반환
+	 * @param pageNo 페이지 번호
+	 * @param name 사용자 이름
+	 * @param phoneNum 사용자 전화번호
+	 * @param createdAtString 생성된 날짜 문자열
+	 * @return 선착순 사용자 목록
+	 * @throws EventNotFoundException 500 에러 - 이벤트를 찾을 수 없음
+	 */
 	@Transactional
 	public ArrivalUserListDto getArrivalApplicationList(int pageNo, String name, String phoneNum, String createdAtString) {
 		// 형식 체크
@@ -211,6 +234,15 @@ public class AdminService {
 		return arrivalUserListDto;
 	}
 
+	/**
+	 * 추첨을 진행한 랜덤 추첨 사용자 목록 반환
+	 * @param pageNo 페이지 번호
+	 * @param name 사용자 이름
+	 * @param phoneNum 사용자 전화번호
+	 * @param createdAtString 생성된 날짜 문자열
+	 * @return 랜덤 추첨 사용자 목록
+	 * @throws EventNotFoundException 500 에러 - 이벤트를 찾을 수 없음
+	 */
 	@Transactional
 	public LotsUserListDto getLotsApplicationList(int pageNo, String name, String phoneNum, String createdAtString) {
 		// 형식 체크
@@ -239,6 +271,12 @@ public class AdminService {
 		return UserMapper.LotsUserPageToLotsUserListDto(page);
 	}
 
+
+	/**
+	 * 추첨을 진행한 랜덤 추첨 사용자 목록 반환 (반환기록 사용 x)
+	 * @return 랜덤 추첨 사용자 목록
+	 * @throws EventNotFoundException 500 에러 - 이벤트를 찾을 수 없음
+	 */
 	@Transactional
 	public LotsUserListDto getLotsResult() {
 		//랜덤 추첨 이벤트
