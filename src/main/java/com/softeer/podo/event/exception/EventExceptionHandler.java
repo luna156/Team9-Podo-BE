@@ -62,4 +62,11 @@ public class EventExceptionHandler {
         log.warn("LOTS-007> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
         return new CommonResponse<>(ErrorCode.INVALID_RESULT_TYPE_ERROR, e.getMessage());
     }
+
+    @ExceptionHandler(MaxCommentLengthException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResponse<?> invalidResultTypeException(MaxCommentLengthException e,  HttpServletRequest request) {
+        log.warn("LOTS-008> 요청 URI: " + request.getRequestURI() + ", 에러 메세지: " + e.getMessage());
+        return new CommonResponse<>(ErrorCode.MAX_COMMENT_LENGTH_ERROR, e.getMessage());
+    }
 }
