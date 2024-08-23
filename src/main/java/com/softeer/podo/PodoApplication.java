@@ -31,28 +31,28 @@ public class PodoApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:8000", "https://www.hyundaiseltos.site")  // 허용할 도메인
+						.allowedOrigins("http://localhost:8000", "https://www.hyundaiseltos.site", "https://d1zb0qi5v6qyks.cloudfront.net")  // 허용할 도메인
 						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")  // 허용할 HTTP 메소드
 						.allowedHeaders("*"); // 허용할 헤더
 			}
 		};
 	}
 
-	@Bean
-	public ServletWebServerFactory servletContainer() {
-		// Enable SSL Trafic
-		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
-			@Override
-			protected void postProcessContext(Context context) {
-				SecurityConstraint securityConstraint = new SecurityConstraint();
-				securityConstraint.setUserConstraint("CONFIDENTIAL");
-				SecurityCollection collection = new SecurityCollection();
-				collection.addPattern("/*");
-				securityConstraint.addCollection(collection);
-				context.addConstraint(securityConstraint);
-			}
-		};
-
-		return tomcat;
-	}
+//	@Bean
+//	public ServletWebServerFactory servletContainer() {
+//		// Enable SSL Trafic
+//		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+//			@Override
+//			protected void postProcessContext(Context context) {
+//				SecurityConstraint securityConstraint = new SecurityConstraint();
+//				securityConstraint.setUserConstraint("CONFIDENTIAL");
+//				SecurityCollection collection = new SecurityCollection();
+//				collection.addPattern("/*");
+//				securityConstraint.addCollection(collection);
+//				context.addConstraint(securityConstraint);
+//			}
+//		};
+//
+//		return tomcat;
+//	}
 }
