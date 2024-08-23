@@ -52,6 +52,7 @@ public class EventLotsService {
      * 랜덤추천 이벤트에서 적절한 드라이버 타입 반환
      * @param dto 선택지 정보
      * @return 유형테스트 결과
+     * @throws InvalidSelectionException 선택형식이 잘못되었을때
      */
     @Transactional(readOnly = true)
     public LotsTypeResponseDto getProperDriverType(LotsTypeRequestDto dto)  {
