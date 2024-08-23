@@ -32,6 +32,7 @@ public class EventLotsController {
             @ApiResponse(responseCode = "400", description = "요청 형식 에러 - 형식이 잘못되었습니다."),
             @ApiResponse(responseCode = "400", description = "사용자가 존재하지 않습니다."),
             @ApiResponse(responseCode = "400", description = "이미 기대평을 작성했습니다."),
+            @ApiResponse(responseCode = "400", description = "기대평이 200자 이상입니다.")
     })
     public CommonResponse<LotsCommentResponseDto> eventComment(
             @Auth AuthInfo authInfo,

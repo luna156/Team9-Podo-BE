@@ -150,6 +150,10 @@ public class EventLotsService {
             throw new ExistingCommentException("이미 기대평을 작성했습니다.");
         }
 
+        if(dto.getComment().length() > 200){
+            throw new MaxCommentLengthException("기대평이 200자 이상입니다.");
+        }
+
         LotsComment comment = LotsComment.builder()
                 .lotsUser(lotsUser)
                 .comment(dto.getComment())
