@@ -21,9 +21,9 @@ public class AdminLog extends DateEntity {
 
     @Column(length = 1000)
     private String requestPath;
-    @Column(length = 10000)
+    @Column(length = 3000)
     private String requestHeader;
-    @Column(length = 10000)
+    @Column(length = 7000)
     private String requestBody;
 
 }
