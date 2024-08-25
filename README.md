@@ -28,11 +28,19 @@
 
 ## 1. 기술 스택
 
+- Java 17
 - Spring Boot 3.3.2
+- Spring Data JPA
 - Database
     - Mysql 8.0.35
     - Redis 7.0.15
-- AWS ec2, s3, rds, codedeploy
+    - H2 2.2.224
+- Github Actions
+- AWS
+  - ec2
+  - s3
+  - RDS
+  - Codedeploy
  
 <br/>
 
@@ -129,7 +137,7 @@
 
 ## 5. 프로젝트 구조
 
-[Lots-Server]
+**[Lots-Server]**
 
 ```
 .
@@ -202,7 +210,7 @@
 
 ```
 
-[Arrival-Server]
+**[Arrival-Server]**
 
 ```
 .
