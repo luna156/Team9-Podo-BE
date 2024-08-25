@@ -1,38 +1,73 @@
-## 기술 스택
+# 프로젝트 소개
 
-- WAS
-    - spring
-- database
-    - mysql
-    - redis
+**HMG Softeer 4th Project**
 
-## 서버 아키텍쳐
+![스크린샷 2024-08-24 오후 9 17 01](https://github.com/user-attachments/assets/5cb6f713-3926-4bfc-9298-33eae6549a86)
+
+
+
+2025 셀토스 출시 이벤트 (BE repo)
+
+<br/>
+<br/>
+
+## 프로젝트 목표
+
+
+
+## 팀원 소개
+
+<div align="center">
+  
+| 김영빈 <br/> [@eckrin](https://github.com/eckrin) | 강승구 <br/> [@luna156](https://github.com/luna156) |
+|:--:|:--:|
+| <img src="https://avatars.githubusercontent.com/eckrin"  width=200> | <img src="https://avatars.githubusercontent.com/luna156"  width=200> |
+
+</div>
+<br/>
+
+## 1. 기술 스택
+
+- Spring Boot 3.3.2
+- Database
+    - Mysql 8.0.35
+    - Redis 7.0.15
+- AWS ec2, s3, rds, codedeploy
+ 
+<br/>
+
+## 2. 서버 아키텍쳐
+
+![image (2)](https://github.com/user-attachments/assets/385e33a3-b8b1-4df0-9870-d54037ef0420)
 
 - 범용 api 서버
     - spring
-        - 대부분의 api 요청을 처리하기 위한 웹서버
-        - 전화번호 인증의 경우 외부 sms 전송 api를 사용할 예정
-    - mysql
-        - 당첨자 저장 및 이벤트 데이터 저장용 DB
+        - 일반적인 api 요청을 처리하기 위한 웹서버
+        - 전화번호 인증의 경우 외부 sms 전송 api 사용
+    - redis
+        - 전화번호 인증번호를 임시로 저장
 - 선착순 api 서버
-    - message queue
-        - 대규모 트래픽으로 인한 요청 손실을 줄이기 위한 queue
     - spring
         - 선착순 요청 api용 웹서버
     - redis
-        - 선착순 인원수 체크를 위한 인메모리 저장소
-<img width="1176" alt="architecture" src="https://github.com/user-attachments/assets/7b6a596a-e948-4bbc-93d5-43498ffe48cb">
+        - 선착순 이벤트시 인원수 체크와 동시성 처리를 위한 인메모리 저장소
+        - 당일 진행될 퀴즈 정보 캐싱
+- RDS
+    - mysql
+        - 당첨자 저장 등 영구적으로 저장될 모든 데이터를 보관
 
-## ERD
-<img width="997" alt="ERD" src="https://github.com/user-attachments/assets/ecf6b95d-6ddd-4369-912e-9286341e17e7">
-## 발생 가능한 이슈
 
-- 대규모 트래픽으로 인해 redis가 ec2 메모리를 넘어가는 경우
+<br/>
 
-## 그라운드 룰
+## 3. ERD
 
-## 공통
+![image](https://github.com/user-attachments/assets/cd63a7fd-8609-4dc0-b681-dff875334da8)
 
+<br/>
+
+## 4. 그라운드 룰
+
+### 공통
 - 모든 컨벤션은 팀원간 합의를 통해서 변경할 수 있다.
 
 ### 코드 컨벤션
@@ -44,6 +79,8 @@
 - ENUM, 상수: **Upper_snake_case**
 - 컬렉션(Collection): **복수형**을 사용하거나 **컬렉션을 명시합니다**. (Ex. userList, users, userMap)
 - LocalDateTime: 접미사에 **Date**를 붙입니다.
+
+<br/>
 
 ### 커밋 컨벤션
 
@@ -59,17 +96,24 @@
 - `test` : 테스트 코드 관련 작업
 - `chore` : 빌드 업무 등 기타 작업
 
+<br/>
+
 ### 브랜치 전략
 ![Untitled](https://github.com/user-attachments/assets/4be0cbab-c7e5-4710-b4db-a41a2ce49b4e)
 
 
-→ 기본적으로는 **Github Flow** 전략을 사용한다. 
-
+→ **Github Flow** 전략을 사용한다. 
 → PR시 Issue 번호를 명시하고, 코드리뷰 진행후 머지한다.
+
+→ master는 production 브랜치의 역할을 하고, 기능별로 feature브랜치를 뽑아 작업한다.
+
+<br/>
 
 ### 브랜치 명명규칙
 
 → 브랜치는 [branch]/[detail]과 같이 브랜치명을 앞에 명시하고, 뒤에 작업 내용을 적는다. [ex) feat/chat]
+
+<br/>
 
 ### 작업 순서
 
@@ -81,13 +125,117 @@
 
 → 팀원의 코드리뷰 후 문제가 없다면 머지하고, 논의할 사항이 있다면 별도의 시간을 할당하여 합의한다.
 
+<br/>
 
-## 팀원 소개
+## 5. 프로젝트 구조
 
-<div align="center">
-  
-| 김영빈 <br/> [@eckrin](https://github.com/eckrin) | 강승구 <br/> [@luna156](https://github.com/luna156) |
-|:--:|:--:|
-| <img src="https://avatars.githubusercontent.com/eckrin"  width=200> | <img src="https://avatars.githubusercontent.com/luna156"  width=200> |
+[Lots-Server]
 
-</div>
+```
+.
+├── build
+│   ├── classes
+│   │   └── java
+│   │       ├── main
+│   │       │   └── com
+│   │       │       └── softeer
+│   │       │           └── podo
+│   │       │               ├── admin
+│   │       │               │   ├── controller
+│   │       │               │   ├── exception
+│   │       │               │   ├── model
+│   │       │               │   │   ├── dto
+│   │       │               │   │   │   ├── request
+│   │       │               │   │   │   └── response
+│   │       │               │   │   └── mapper
+│   │       │               │   ├── service
+│   │       │               │   └── validation
+│   │       │               ├── common
+│   │       │               │   ├── entity
+│   │       │               │   ├── exception
+│   │       │               │   ├── response
+│   │       │               │   └── utils
+│   │       │               ├── config
+│   │       │               ├── event
+│   │       │               │   ├── controller
+│   │       │               │   ├── exception
+│   │       │               │   ├── model
+│   │       │               │   │   ├── dto
+│   │       │               │   │   │   ├── request
+│   │       │               │   │   │   └── response
+│   │       │               │   │   ├── entity
+│   │       │               │   │   └── mapper
+│   │       │               │   ├── repository
+│   │       │               │   ├── scheduler
+│   │       │               │   ├── service
+│   │       │               │   └── util
+│   │       │               ├── log
+│   │       │               │   ├── aop
+│   │       │               │   ├── filter
+│   │       │               │   ├── mapper
+│   │       │               │   ├── model
+│   │       │               │   │   ├── dto
+│   │       │               │   │   └── entity
+│   │       │               │   ├── repository
+│   │       │               │   └── service
+│   │       │               ├── security
+│   │       │               │   └── jwt
+│   │       │               │       └── exception
+│   │       │               ├── test
+│   │       │               │   ├── controller
+│   │       │               │   ├── exception
+│   │       │               │   ├── model
+│   │       │               │   │   └── dto
+│   │       │               │   │       ├── request
+│   │       │               │   │       └── response
+│   │       │               │   ├── repository
+│   │       │               │   └── service
+│   │       │               └── verification
+│   │       │                   ├── controller
+│   │       │                   ├── exception
+│   │       │                   ├── facade
+│   │       │                   ├── model
+│   │       │                   │   └── dto
+│   │       │                   │       ├── request
+│   │       │                   │       └── response
+│   │       │                   └── service
+
+```
+
+[Arrival-Server]
+
+```
+.
+├── build
+│   ├── classes
+│   │   └── java
+│   │       ├── main
+│   │       │   └── com
+│   │       │       └── softeer
+│   │       │           └── podoarrival
+│   │       │               ├── common
+│   │       │               │   ├── entity
+│   │       │               │   └── response
+│   │       │               ├── config
+│   │       │               ├── event
+│   │       │               │   ├── controller
+│   │       │               │   ├── exception
+│   │       │               │   ├── model
+│   │       │               │   │   ├── dto
+│   │       │               │   │   └── entity
+│   │       │               │   ├── repository
+│   │       │               │   ├── scheduler
+│   │       │               │   └── service
+│   │       │               ├── mapper
+│   │       │               ├── security
+│   │       │               │   └── jwt
+│   │       │               │       └── exception
+│   │       │               └── test
+│   │       │                   ├── controller
+│   │       │                   └── exception
+
+```
+
+
+
+<br/>
